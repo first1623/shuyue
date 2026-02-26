@@ -1,0 +1,173 @@
+<view class="theme-detail-page">
+  <!-- 状态栏占位 -->
+  <view class="status-bar" style="height: {{statusBarHeight}}px;"></view>
+  
+  <!-- 自定义导航栏 -->
+  <view class="custom-nav" style="background: linear-gradient(135deg, {{themeColor}} 0%, {{darkenColor}} 100%);">
+    <view class="nav-left" bindtap="goBack">
+      <text class="nav-back">←</text>
+    </view>
+    <view class="nav-title">{{themeName}}主题</view>
+    <view class="nav-right">
+      <text class="nav-share" bindtap="onShare">↗</text>
+    </view>
+  </view>
+
+  <!-- 页面内容滚动区 -->
+  <scroll-view class="page-content" scroll-y="true">
+    
+    <!-- 第一区域：主题头部区 -->
+    <view class="theme-header" style="background-image: url({{themeBgImage}});">
+      <view class="header-overlay" style="background: linear-gradient(180deg, {{themeColor}}99 0%, {{darkenColor}}CC 100%);"></view>
+      <view class="header-content">
+        <view class="theme-icon-large" style="background: {{themeColor}};">
+          <text class="icon-emoji">{{themeIcon}}</text>
+        </view>
+        <text class="theme-title">{{themeName}}主题</text>
+        <text class="theme-subtitle">{{themeSubtitle}}</text>
+        <view 
+          class="subscribe-btn {{isSubscribed ? 'subscribed' : ''}}" 
+          style="background: {{isSubscribed ? '#9CA3AF' : '#FFFFFF'}};"
+          bindtap="onSubscribe"
+        >
+          <text class="subscribe-text" style="color: {{isSubscribed ? '#FFFFFF' : themeColor}};">
+            {{isSubscribed ? '已订阅' : '立即订阅'}}
+          </text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 第二区域：智库专家团队区 -->
+    <view class="section-card experts-section">
+      <view class="section-header">
+        <text class="section-title">智库专家团队</text>
+        <text class="section-more" bindtap="viewAllExperts">查看全部</text>
+      </view>
+      <scroll-view class="experts-scroll" scroll-x="true" show-scrollbar="false">
+        <view class="experts-list">
+          <view 
+            wx:for="{{experts}}" 
+            wx:key="id"
+            class="expert-item"
+            bindtap="onExpertTap"
+            data-id="{{item.id}}"
+          >
+            <image class="expert-avatar" src="{{item.avatar}}" mode="aspectFill"/>
+            <text class="expert-name">{{item.name}}</text>
+            <text class="expert-title">{{item.title}}</text>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- 第三区域：智库报告卡片区 -->
+    <view class="section-card reports-section">
+      <view class="section-header">
+        <text class="section-title">智库报告</text>
+        <text class="section-more" bindtap="viewAllReports">查看全部</text>
+      </view>
+      <scroll-view class="reports-scroll" scroll-x="true" show-scrollbar="false">
+        <view class="reports-list">
+          <view 
+            wx:for="{{reports}}" 
+            wx:key="id"
+            class="report-card"
+            bindtap="onReportTap"
+            data-id="{{item.id}}"
+          >
+            <view class="report-header">
+              <view class="report-icon" style="background: {{themeColor}}20;">
+                <text class="icon-emoji-small">{{item.icon}}</text>
+              </view>
+              <view class="report-info">
+                <text class="report-title">{{item.title}}</text>
+                <text class="report-meta">{{item.author}} · {{item.publishDate}}</text>
+              </view>
+            </view>
+            <view class="report-footer">
+              <text class="report-pages">{{item.pages}}页</text>
+              <text class="report-type">{{item.type}}</text>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- 第四区域：数据指标区 -->
+    <view class="section-card metrics-section">
+      <view class="section-header">
+        <text class="section-title">{{themeName}}数据</text>
+        <view class="time-filter" bindtap="onTimeFilterChange">
+          <text class="filter-text">{{timeFilter}}</text>
+          <text class="filter-arrow">▼</text>
+        </view>
+      </view>
+      
+      <!-- 关键指标卡片 -->
+      <view class="metrics-grid">
+        <view 
+          wx:for="{{keyMetrics}}" 
+          wx:key="id"
+          class="metric-card"
+          style="background: linear-gradient(135deg, {{item.bgColor}} 0%, {{item.bgColor}}80 100%);"
+        >
+          <text class="metric-value">{{item.value}}</text>
+          <text class="metric-label">{{item.label}}</text>
+          <view class="metric-trend {{item.trend > 0 ? 'up' : 'down'}}">
+            <text class="trend-icon">{{item.trend > 0 ? '↑' : '↓'}}</text>
+            <text class="trend-value">{{item.trend > 0 ? '+' : ''}}{{item.trend}}%</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 图表区域 -->
+      <view class="chart-container">
+        <text class="chart-title">{{chartTitle}}</text>
+        <view class="chart-placeholder">
+          <view class="chart-bars">
+            <view 
+              wx:for="{{chartData}}" 
+              wx:key="index"
+              class="chart-bar"
+              style="height: {{item.value}}%; background: {{themeColor}};"
+            >
+              <text class="bar-value">{{item.label}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 查看全部按钮 -->
+      <view class="view-all-btn" bindtap="viewAllMetrics">
+        <text class="btn-text">查看所有指标</text>
+        <text class="btn-arrow">→</text>
+      </view>
+    </view>
+
+    <!-- 底部间距 -->
+    <view class="bottom-space"></view>
+  </scroll-view>
+
+  <!-- 时间筛选弹窗 -->
+  <view class="filter-popup {{showFilterPopup ? 'show' : ''}}" bindtap="closeFilterPopup">
+    <view class="popup-content" catchtap="stopPropagation">
+      <view class="popup-header">
+        <text class="popup-title">选择时间范围</text>
+        <text class="popup-close" bindtap="closeFilterPopup">×</text>
+      </view>
+      <view class="filter-options">
+        <view 
+          wx:for="{{timeFilters}}" 
+          wx:key="*this"
+          class="filter-option {{timeFilter === item ? 'active' : ''}}"
+          style="color: {{timeFilter === item ? themeColor : '#666'}};"
+          bindtap="selectTimeFilter"
+          data-value="{{item}}"
+        >
+          {{item}}
+          <text wx:if="{{timeFilter === item}}" class="check-icon">✓</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

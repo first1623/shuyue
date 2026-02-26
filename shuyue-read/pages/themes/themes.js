@@ -231,9 +231,18 @@ Page({
 
   // 跳转到主题详情
   goToThemeDetail(themeId) {
-    wx.navigateTo({
-      url: `/pages/themeDetail/themeDetail?id=${themeId}`
-    });
+    const theme = this.data.themes.find(t => t.id === themeId);
+    if (theme) {
+      wx.navigateTo({
+        url: `/pages/themeDetail/themeDetail?id=${themeId}&name=${encodeURIComponent(theme.name)}`
+      });
+    }
+  },
+
+  // 点击卡片查看更多
+  onCardTap(e) {
+    const themeId = e.currentTarget.dataset.id;
+    this.goToThemeDetail(themeId);
   },
 
   // 分享功能
