@@ -103,29 +103,74 @@ Page({
     // 获取系统信息
     const systemInfo = wx.getSystemInfoSync();
     this.setData({
-      statusBarHeight: systemInfo.statusBarHeight,
-      themeCount: this.data.themes.length
+      statusBarHeight: systemInfo.statusBarHeight
     });
     
-    this.updateRemainingCount();
-    
-    // 加载已订阅状态
-    this.loadSubscriptionStatus();
+    // 从数据库加载主题列表
+    this.loadThemesFromDB();
   },
 
   onShow() {
-    // 页面显示时更新订阅状态
-    this.loadSubscriptionStatus();
+    // 页面显示时刷新数据
+    this.loadThemesFromDB();
   },
 
-  // 加载订阅状态
-  loadSubscriptionStatus() {
+  // 从数据库加载主题列表
+  async loadThemesFromDB() {
+    try {
+      const res = await wx.cloud.callFunction({
+        name: 'getThemesList',
+        data: {
+          page: 1,
+          pageSize: 20
+        }
+      });
+
+      if (res.result.success) {
+        const themes = res.result.data.themes.map((theme, index) => ({
+          ...theme,
+          position: `position-${index % 8}`,
+          delay: (index % 5) * 0.2,
+          iconType: 'emoji'
+        }));
+        
+        this.setData({
+          themes: themes,
+          themeCount: themes.length
+        });
+        
+        this.updateRemainingCount();
+      }
+    } catch (err) {
+      console.error('获取主题列表失败:', err);
+      // 使用本地数据
+      this.loadThemesLocal();
+    }
+  },
+
+  // 本地备用数据
+  loadThemesLocal() {
     const subscribedIds = wx.getStorageSync('subscribedThemes') || [];
-    const themes = this.data.themes.map(theme => ({
+    const localThemes = [
+      { id: 'carbon', name: '碳中和', shortName: '碳中和', icon: '🌿', color: '#10B981', lightColor: 'rgba(16, 185, 129, 0.15)', tags: ['绿色发展', '环保领域'], description: '双碳目标政策解读与企业碳中和实施路径', isSubscribed: subscribedIds.includes('carbon') },
+      { id: '13th-five', name: '十三五规划', shortName: '十三五', icon: '📊', color: '#DC2626', lightColor: 'rgba(220, 38, 38, 0.15)', tags: ['国家规划', '宏观政策'], description: '十三五规划数字化项目落地案例与政策解读', isSubscribed: subscribedIds.includes('13th-five') },
+      { id: 'coal', name: '煤炭产业', shortName: '煤炭', icon: '⛏️', color: '#4B5563', lightColor: 'rgba(75, 85, 99, 0.15)', tags: ['传统能源', '产业转型'], description: '煤炭行业智能化转型与清洁利用技术', isSubscribed: subscribedIds.includes('coal') },
+      { id: 'power', name: '电力能源', shortName: '电力', icon: '⚡', color: '#F59E0B', lightColor: 'rgba(245, 158, 11, 0.15)', tags: ['电力行业', '新能源'], description: '智能电网建设与新能源并网技术', isSubscribed: subscribedIds.includes('power') },
+      { id: 'digital-gov', name: '数字化政务', shortName: '数字政务', icon: '🏛️', color: '#3B82F6', lightColor: 'rgba(59, 130, 246, 0.15)', tags: ['政府数字化', '智慧城市'], description: '政务服务数字化转型最佳实践', isSubscribed: subscribedIds.includes('digital-gov') },
+      { id: 'energy-transition', name: '能源转型', shortName: '能源转型', icon: '🔄', color: '#8B5CF6', lightColor: 'rgba(139, 92, 246, 0.15)', tags: ['能源革命', '可再生'], description: '传统能源向可再生能源转型战略', isSubscribed: subscribedIds.includes('energy-transition') }
+    ].map((theme, index) => ({
       ...theme,
-      isSubscribed: subscribedIds.includes(theme.id)
+      position: `position-${index}`,
+      delay: index * 0.2,
+      iconType: 'emoji'
     }));
-    this.setData({ themes });
+    
+    this.setData({
+      themes: localThemes,
+      themeCount: localThemes.length
+    });
+    
+    this.updateRemainingCount();
   },
 
   // 更新剩余数量提示

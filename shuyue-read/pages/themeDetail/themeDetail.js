@@ -29,65 +29,10 @@ Page({
     
     // 图表数据
     chartTitle: '趋势分析',
-    chartData: []
-  },
-
-  // 主题配置
-  themeConfigs: {
-    'carbon': {
-      name: '碳中和',
-      icon: '🌿',
-      color: '#10B981',
-      darkenColor: '#059669',
-      bgImage: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800',
-      subtitle: '聚焦双碳目标、政策解读与行业案例',
-      chartTitle: '碳排放趋势'
-    },
-    '13th-five': {
-      name: '十三五规划',
-      icon: '📊',
-      color: '#DC2626',
-      darkenColor: '#B91C1C',
-      bgImage: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800',
-      subtitle: '国家规划数字化落地案例与政策解读',
-      chartTitle: '规划完成率'
-    },
-    'coal': {
-      name: '煤炭产业',
-      icon: '⛏️',
-      color: '#4B5563',
-      darkenColor: '#374151',
-      bgImage: 'https://images.unsplash.com/photo-1565626424178-c699f6601afd?w=800',
-      subtitle: '煤炭行业智能化转型与清洁利用技术',
-      chartTitle: '产量趋势'
-    },
-    'power': {
-      name: '电力能源',
-      icon: '⚡',
-      color: '#F59E0B',
-      darkenColor: '#D97706',
-      bgImage: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=800',
-      subtitle: '智能电网建设与新能源并网技术',
-      chartTitle: '发电量统计'
-    },
-    'digital-gov': {
-      name: '数字化政务',
-      icon: '🏛️',
-      color: '#3B82F6',
-      darkenColor: '#2563EB',
-      bgImage: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800',
-      subtitle: '政务服务数字化转型最佳实践',
-      chartTitle: '服务指数'
-    },
-    'energy-transition': {
-      name: '能源转型',
-      icon: '🔄',
-      color: '#8B5CF6',
-      darkenColor: '#7C3AED',
-      bgImage: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800',
-      subtitle: '传统能源向可再生能源转型战略',
-      chartTitle: '转型进度'
-    }
+    chartData: [],
+    
+    // 加载状态
+    loading: true
   },
 
   onLoad(options) {
@@ -97,120 +42,115 @@ Page({
     
     // 获取主题ID
     const themeId = options.id || 'carbon';
-    this.loadThemeData(themeId);
+    this.setData({ themeId });
+    
+    // 从数据库加载主题数据
+    this.loadThemeDataFromDB(themeId);
   },
 
   onShow() {
-    // 刷新订阅状态
-    this.checkSubscriptionStatus();
+    // 页面显示时刷新数据
+    if (this.data.themeId) {
+      this.loadThemeDataFromDB(this.data.themeId);
+    }
   },
 
-  // 加载主题数据
-  loadThemeData(themeId) {
-    const config = this.themeConfigs[themeId] || this.themeConfigs['carbon'];
+  // 从数据库加载主题数据
+  async loadThemeDataFromDB(themeId) {
+    this.setData({ loading: true });
+    
+    wx.showLoading({ title: '加载中...' });
+    
+    try {
+      const res = await wx.cloud.callFunction({
+        name: 'getThemeDetail',
+        data: {
+          themeId: themeId,
+          timeRange: this.data.timeFilter
+        }
+      });
+
+      if (res.result.success) {
+        const data = res.result.data;
+        
+        this.setData({
+          themeId: data.theme.id,
+          themeName: data.theme.name,
+          themeIcon: data.theme.icon,
+          themeColor: data.theme.color,
+          darkenColor: data.theme.darkenColor,
+          themeBgImage: data.theme.bgImage,
+          themeSubtitle: data.theme.subtitle,
+          isSubscribed: data.theme.isSubscribed,
+          experts: data.experts,
+          reports: data.reports,
+          keyMetrics: data.metrics.slice(0, 3),
+          chartData: data.metrics[0]?.chartData || [],
+          loading: false
+        });
+      } else {
+        // 如果云函数失败，使用本地备用数据
+        console.log('云函数获取失败，使用本地数据:', res.result.message);
+        this.loadThemeDataLocal(themeId);
+      }
+    } catch (err) {
+      console.error('获取主题数据失败:', err);
+      // 使用本地备用数据
+      this.loadThemeDataLocal(themeId);
+    } finally {
+      wx.hideLoading();
+    }
+  },
+
+  // 本地备用数据（云函数失败时使用）
+  loadThemeDataLocal(themeId) {
+    const themeConfigs = {
+      'carbon': {
+        name: '碳中和',
+        icon: '🌿',
+        color: '#10B981',
+        darkenColor: '#059669',
+        bgImage: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800',
+        subtitle: '聚焦双碳目标、政策解读与行业案例'
+      },
+      '13th-five': {
+        name: '十三五规划',
+        icon: '📊',
+        color: '#DC2626',
+        darkenColor: '#B91C1C',
+        bgImage: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800',
+        subtitle: '国家规划数字化落地案例与政策解读'
+      }
+    };
+    
+    const config = themeConfigs[themeId] || themeConfigs['carbon'];
+    const subscribedIds = wx.getStorageSync('subscribedThemes') || [];
     
     this.setData({
-      themeId: themeId,
       themeName: config.name,
       themeIcon: config.icon,
       themeColor: config.color,
       darkenColor: config.darkenColor,
       themeBgImage: config.bgImage,
       themeSubtitle: config.subtitle,
-      chartTitle: config.chartTitle
-    });
-    
-    // 加载专家团队
-    this.loadExperts(themeId);
-    
-    // 加载智库报告
-    this.loadReports(themeId);
-    
-    // 加载数据指标
-    this.loadMetrics(themeId);
-    
-    // 检查订阅状态
-    this.checkSubscriptionStatus();
-  },
-
-  // 检查订阅状态
-  checkSubscriptionStatus() {
-    const subscribedIds = wx.getStorageSync('subscribedThemes') || [];
-    this.setData({
-      isSubscribed: subscribedIds.includes(this.data.themeId)
-    });
-  },
-
-  // 加载专家团队
-  loadExperts(themeId) {
-    // 模拟数据，实际应从云数据库获取
-    const expertsData = {
-      'carbon': [
+      isSubscribed: subscribedIds.includes(themeId),
+      experts: [
         { id: 'e1', name: '吴擎中', title: '碳中和首席专家', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=1' },
-        { id: 'e2', name: '赵峰峰', title: '环境政策研究员', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=2' },
-        { id: 'e3', name: '李清华', title: '能源转型顾问', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=3' },
-        { id: 'e4', name: '王绿原', title: '碳交易分析师', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=4' }
+        { id: 'e2', name: '赵峰峰', title: '环境政策研究员', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=2' }
       ],
-      '13th-five': [
-        { id: 'e5', name: '张建国', title: '国家规划专家', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=5' },
-        { id: 'e6', name: '刘政策', title: '宏观经济研究员', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=6' },
-        { id: 'e7', name: '陈数字', title: '数字化转型顾问', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=7' }
-      ]
-    };
-    
-    const experts = expertsData[themeId] || expertsData['carbon'];
-    this.setData({ experts });
-  },
-
-  // 加载智库报告
-  loadReports(themeId) {
-    // 模拟数据，实际应从云数据库获取
-    const reportsData = {
-      'carbon': [
-        { id: 'r1', icon: '📑', title: '2024年中国碳中和实施路径研究报告', author: '碳中和研究院', publishDate: '2024-01', pages: 128, type: '研究报告' },
-        { id: 'r2', icon: '📊', title: '企业碳盘查与碳足迹核算指南', author: '环保部标准司', publishDate: '2024-02', pages: 86, type: '政策指南' },
-        { id: 'r3', icon: '🌍', title: '全球碳交易市场发展现状分析', author: '国际金融中心', publishDate: '2024-03', pages: 156, type: '市场分析' },
-        { id: 'r4', icon: '🏭', title: '重点行业碳减排技术路线白皮书', author: '工信部节能司', publishDate: '2024-01', pages: 203, type: '技术白皮书' }
+      reports: [
+        { id: 'r1', icon: '📑', title: '2024年中国碳中和实施路径研究报告', author: '碳中和研究院', publishDate: '2024-01', pages: 128, type: '研究报告' }
       ],
-      '13th-five': [
-        { id: 'r5', icon: '📋', title: '十三五规划数字化项目落地案例汇编', author: '发改委数字中心', publishDate: '2024-02', pages: 245, type: '案例汇编' },
-        { id: 'r6', icon: '📈', title: '规划中期评估与调整建议报告', author: '国务院发展中心', publishDate: '2024-01', pages: 167, type: '评估报告' }
-      ]
-    };
-    
-    const reports = reportsData[themeId] || reportsData['carbon'];
-    this.setData({ reports });
-  },
-
-  // 加载数据指标
-  loadMetrics(themeId) {
-    // 模拟数据
-    const metricsData = {
-      'carbon': [
-        { id: 'm1', value: '12%', label: '排放量下降', trend: 12, bgColor: '#10B981' },
-        { id: 'm2', value: '35%', label: '可再生能源占比', trend: 8, bgColor: '#3B82F6' },
-        { id: 'm3', value: '2.3亿', label: '碳交易量(吨)', trend: 25, bgColor: '#8B5CF6' }
+      keyMetrics: [
+        { id: 'm1', name: '碳排放量下降', value: '12%', trend: 12, bgColor: '#10B981' }
       ],
-      '13th-five': [
-        { id: 'm4', value: '96%', label: '规划完成率', trend: 5, bgColor: '#DC2626' },
-        { id: 'm5', value: '1.2万亿', label: '数字化投入', trend: 15, bgColor: '#F59E0B' },
-        { id: 'm6', value: '85%', label: '项目落地率', trend: 10, bgColor: '#10B981' }
-      ]
-    };
-    
-    const keyMetrics = metricsData[themeId] || metricsData['carbon'];
-    
-    // 模拟图表数据
-    const chartData = [
-      { label: '1月', value: 65 },
-      { label: '2月', value: 72 },
-      { label: '3月', value: 68 },
-      { label: '4月', value: 85 },
-      { label: '5月', value: 78 },
-      { label: '6月', value: 92 }
-    ];
-    
-    this.setData({ keyMetrics, chartData });
+      chartData: [
+        { label: '1月', value: 65 },
+        { label: '2月', value: 72 },
+        { label: '3月', value: 68 }
+      ],
+      loading: false
+    });
   },
 
   // 订阅/取消订阅
