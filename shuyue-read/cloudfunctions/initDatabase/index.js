@@ -7,8 +7,43 @@ cloud.init({
 const db = cloud.database();
 const _ = db.command;
 
-// 初始化主题数据
-const themesData = [
+// ==================== 栏目数据定义 ====================
+// 定义与主题关联的栏目结构
+const categoriesData = [
+  // 碳中和相关栏目
+  { categoryId: 'cat_env_policy', name: '环保政策', sort: 1, type: 'theme_related' },
+  { categoryId: 'cat_carbon_trading', name: '碳交易市场', sort: 2, type: 'theme_related' },
+  { categoryId: 'cat_green_tech', name: '绿色技术', sort: 3, type: 'theme_related' },
+  // 十三五规划相关栏目
+  { categoryId: 'cat_national_plan', name: '国家规划', sort: 4, type: 'theme_related' },
+  { categoryId: 'cat_digital_case', name: '数字化案例', sort: 5, type: 'theme_related' },
+  // 能源相关栏目
+  { categoryId: 'cat_energy_policy', name: '能源政策', sort: 6, type: 'theme_related' },
+  { categoryId: 'cat_smart_grid', name: '智能电网', sort: 7, type: 'theme_related' },
+  { categoryId: 'cat_renewable', name: '新能源', sort: 8, type: 'theme_related' },
+  // 煤炭产业相关栏目
+  { categoryId: 'cat_coal_tech', name: '煤炭技术', sort: 9, type: 'theme_related' },
+  { categoryId: 'cat_clean_energy', name: '清洁能源', sort: 10, type: 'theme_related' },
+  // 政务数字化相关栏目
+  { categoryId: 'cat_gov_digital', name: '政务数字化', sort: 11, type: 'theme_related' },
+  { categoryId: 'cat_smart_city', name: '智慧城市', sort: 12, type: 'theme_related' },
+  // 基础栏目
+  { categoryId: 'cat_think_tank', name: '智库报告', sort: 13, type: 'base' },
+  { categoryId: 'cat_data_report', name: '数据报告', sort: 14, type: 'base' }
+];
+
+// ==================== 主题与栏目关联映射 ====================
+const themeCategoryMapping = {
+  'carbon': ['cat_env_policy', 'cat_carbon_trading', 'cat_green_tech', 'cat_think_tank', 'cat_data_report'],
+  '13th-five': ['cat_national_plan', 'cat_digital_case', 'cat_think_tank', 'cat_data_report'],
+  'coal': ['cat_energy_policy', 'cat_coal_tech', 'cat_clean_energy', 'cat_think_tank'],
+  'power': ['cat_energy_policy', 'cat_smart_grid', 'cat_renewable', 'cat_think_tank', 'cat_data_report'],
+  'digital-gov': ['cat_gov_digital', 'cat_smart_city', 'cat_digital_case', 'cat_think_tank'],
+  'energy-transition': ['cat_energy_policy', 'cat_renewable', 'cat_clean_energy', 'cat_think_tank', 'cat_data_report']
+};
+
+// 动态生成主题数据（categoryIds 将在初始化时填入）
+const getThemesData = (categoryMap) => [
   {
     themeId: 'carbon',
     name: '碳中和',
@@ -21,7 +56,7 @@ const themesData = [
     tags: ['绿色发展', '环保领域'],
     description: '双碳目标政策解读与企业碳中和实施路径，涵盖碳盘查、碳交易等核心内容。',
     subtitle: '聚焦双碳目标、政策解读与行业案例',
-    categoryIds: [],
+    categoryIds: categoryMap['carbon'] || [],
     sort: 1,
     status: true
   },
@@ -37,7 +72,7 @@ const themesData = [
     tags: ['国家规划', '宏观政策'],
     description: '十三五规划数字化项目落地案例与政策解读，助力政企高效执行。',
     subtitle: '国家规划数字化落地案例与政策解读',
-    categoryIds: [],
+    categoryIds: categoryMap['13th-five'] || [],
     sort: 2,
     status: true
   },
@@ -53,7 +88,7 @@ const themesData = [
     tags: ['传统能源', '产业转型'],
     description: '煤炭行业智能化转型与清洁利用技术，推动产业升级与绿色发展。',
     subtitle: '煤炭行业智能化转型与清洁利用技术',
-    categoryIds: [],
+    categoryIds: categoryMap['coal'] || [],
     sort: 3,
     status: true
   },
@@ -69,7 +104,7 @@ const themesData = [
     tags: ['电力行业', '新能源'],
     description: '智能电网建设与新能源并网技术，聚焦电力行业数字化转型实践。',
     subtitle: '智能电网建设与新能源并网技术',
-    categoryIds: [],
+    categoryIds: categoryMap['power'] || [],
     sort: 4,
     status: true
   },
@@ -78,6 +113,34 @@ const themesData = [
     name: '数字化政务',
     shortName: '数字政务',
     color: '#3B82F6',
+    darkenColor: '#2563EB',
+    lightColor: 'rgba(59, 130, 246, 0.15)',
+    icon: '🏛️',
+    bgImage: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800',
+    tags: ['政府数字化', '智慧城市'],
+    description: '政务服务数字化转型最佳实践，一网通办、数据共享等创新应用。',
+    subtitle: '政务服务数字化转型最佳实践',
+    categoryIds: categoryMap['digital-gov'] || [],
+    sort: 5,
+    status: true
+  },
+  {
+    themeId: 'energy-transition',
+    name: '能源转型',
+    shortName: '能源转型',
+    color: '#8B5CF6',
+    darkenColor: '#7C3AED',
+    lightColor: 'rgba(139, 92, 246, 0.15)',
+    icon: '🔄',
+    bgImage: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800',
+    tags: ['能源革命', '可再生'],
+    description: '传统能源向可再生能源转型战略，储能技术与多能互补解决方案。',
+    subtitle: '传统能源向可再生能源转型战略',
+    categoryIds: categoryMap['energy-transition'] || [],
+    sort: 6,
+    status: true
+  }
+];
     darkenColor: '#2563EB',
     lightColor: 'rgba(59, 130, 246, 0.15)',
     icon: '🏛️',
@@ -185,7 +248,7 @@ const reportsData = [
     author: '碳中和研究院',
     icon: '📑',
     themeIds: ['carbon'],
-    categoryIds: [],
+    categoryIds: ['cat_env_policy', 'cat_think_tank'],
     pages: 128,
     type: '研究报告',
     description: '全面分析中国碳中和目标的实施路径与关键举措',
@@ -200,7 +263,7 @@ const reportsData = [
     author: '环保部标准司',
     icon: '📊',
     themeIds: ['carbon'],
-    categoryIds: [],
+    categoryIds: ['cat_green_tech', 'cat_data_report'],
     pages: 86,
     type: '政策指南',
     description: '企业碳盘查标准化操作指南与核算方法',
@@ -215,7 +278,7 @@ const reportsData = [
     author: '国际金融中心',
     icon: '🌍',
     themeIds: ['carbon'],
-    categoryIds: [],
+    categoryIds: ['cat_carbon_trading', 'cat_data_report'],
     pages: 156,
     type: '市场分析',
     description: '全球主要碳交易市场运行机制与价格走势分析',
@@ -230,7 +293,7 @@ const reportsData = [
     author: '发改委数字中心',
     icon: '📋',
     themeIds: ['13th-five'],
-    categoryIds: [],
+    categoryIds: ['cat_national_plan', 'cat_digital_case'],
     pages: 245,
     type: '案例汇编',
     description: '汇总十三五期间数字化项目成功案例',
@@ -240,6 +303,14 @@ const reportsData = [
     status: true
   }
 ];
+
+// 动态转换报告的categoryIds为真实ID
+const getReportsData = (categoryIdMap) => {
+  return reportsData.map(report => ({
+    ...report,
+    categoryIds: report.categoryIds.map(catId => categoryIdMap[catId]).filter(id => id)
+  }));
+};
 
 // 初始化指标数据
 const metricsData = [
@@ -325,14 +396,67 @@ exports.main = async (event, context) => {
   
   try {
     const results = {
+      categories: { success: 0, failed: 0, ids: {} },
       themes: { success: 0, failed: 0 },
       experts: { success: 0, failed: 0 },
       reports: { success: 0, failed: 0 },
       metrics: { success: 0, failed: 0 }
     };
 
-    // 初始化主题
+    // 步骤1: 初始化栏目（categories）
+    if (type === 'all' || type === 'categories') {
+      console.log('开始初始化栏目数据...');
+      for (const cat of categoriesData) {
+        try {
+          const exist = await db.collection('categories').where({ categoryId: cat.categoryId }).count();
+          if (exist.total === 0) {
+            const res = await db.collection('categories').add({
+              data: {
+                ...cat,
+                status: true,
+                createTime: db.serverDate()
+              }
+            });
+            results.categories.success++;
+            results.categories.ids[cat.categoryId] = res._id;
+            console.log(`栏目 ${cat.name} 创建成功, _id: ${res._id}`);
+          } else {
+            // 获取已存在的栏目ID
+            const existing = await db.collection('categories').where({ categoryId: cat.categoryId }).get();
+            if (existing.data.length > 0) {
+              results.categories.ids[cat.categoryId] = existing.data[0]._id;
+              console.log(`栏目 ${cat.name} 已存在, _id: ${existing.data[0]._id}`);
+            }
+          }
+        } catch (err) {
+          console.error(`初始化栏目 ${cat.name} 失败:`, err);
+          results.categories.failed++;
+        }
+      }
+    }
+
+    // 步骤2: 构建栏目ID映射（用于主题关联）
+    let categoryIdMap = {};
+    if (type === 'all' || type === 'categories' || type === 'themes') {
+      const allCategories = await db.collection('categories').get();
+      allCategories.data.forEach(cat => {
+        categoryIdMap[cat.categoryId] = cat._id;
+      });
+      console.log('栏目ID映射:', categoryIdMap);
+    }
+
+    // 步骤3: 构建主题与真实栏目ID的关联
+    const themeCategoryIdMap = {};
+    for (const [themeId, catIds] of Object.entries(themeCategoryMapping)) {
+      themeCategoryIdMap[themeId] = catIds.map(catId => categoryIdMap[catId]).filter(id => id);
+    }
+    console.log('主题-栏目关联映射:', themeCategoryIdMap);
+
+    // 步骤4: 初始化主题（使用真实的categoryIds）
+    const themesData = getThemesData(themeCategoryIdMap);
+
     if (type === 'all' || type === 'themes') {
+      console.log('开始初始化主题数据...');
       for (const theme of themesData) {
         try {
           const exist = await db.collection('themes').where({ themeId: theme.themeId }).count();
@@ -374,9 +498,12 @@ exports.main = async (event, context) => {
       }
     }
 
-    // 初始化报告
+    // 步骤5: 初始化报告（使用真实的categoryIds）
+    const reportsDataConverted = getReportsData(categoryIdMap);
+
     if (type === 'all' || type === 'reports') {
-      for (const report of reportsData) {
+      console.log('开始初始化报告数据...');
+      for (const report of reportsDataConverted) {
         try {
           const exist = await db.collection('reports').where({ reportId: report.reportId }).count();
           if (exist.total === 0) {
