@@ -5,10 +5,11 @@
   background-color: var(--bg-color);
 }
 
-/* 用户信息 */
+/* ==================== 用户头部区域 ==================== */
+/* 背景：紫蓝渐变 */
 .user-section {
-  background: linear-gradient(135deg, #4A90E2 0%, #6BA3F6 100%);
-  padding: 60rpx 30rpx 40rpx;
+  background: var(--primary-gradient);
+  padding: 80rpx 32rpx 60rpx;
 }
 
 .user-info {
@@ -17,19 +18,21 @@
   align-items: center;
 }
 
+/* 头像：圆形、白色描边4rpx */
 .avatar {
-  width: 140rpx;
-  height: 140rpx;
+  width: 160rpx;
+  height: 160rpx;
   border-radius: 50%;
-  border: 4rpx solid var(--white);
-  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.15);
+  border: 4rpx solid var(--text-white);
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.2);
 }
 
+/* 用户名：白色、粗体、居中 */
 .nickname {
-  margin-top: 20rpx;
-  font-size: 32rpx;
-  font-weight: 500;
-  color: var(--white);
+  margin-top: 24rpx;
+  font-size: 40rpx;
+  font-weight: 600;
+  color: var(--text-white);
 }
 
 .user-login {
@@ -38,21 +41,29 @@
 }
 
 .btn-login {
-  background-color: var(--white);
+  background-color: var(--text-white);
   color: var(--primary-color);
-  border-radius: 44rpx;
-  padding: 20rpx 60rpx;
-  font-size: 28rpx;
-  font-weight: 500;
+  border-radius: 999rpx;
+  padding: 24rpx 80rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  box-shadow: var(--shadow);
+  border: none;
 }
 
-/* 统计信息 */
+/* ==================== 数据统计卡片 ==================== */
+/* 毛玻璃背景、32rpx左右边距、大圆角32rpx */
 .stats-section {
   display: flex;
-  background-color: var(--white);
+  background: var(--bg-glass);
+  backdrop-filter: blur(20rpx);
+  -webkit-backdrop-filter: blur(20rpx);
   padding: 40rpx 0;
-  border-radius: 0 0 20rpx 20rpx;
-  margin-bottom: 20rpx;
+  border-radius: 32rpx;
+  margin: -40rpx 32rpx 32rpx;
+  position: relative;
+  z-index: 10;
+  box-shadow: var(--shadow);
 }
 
 .stat-item {
@@ -67,30 +78,34 @@
   border-right: none;
 }
 
+/* 数字：主色、粗体、大号 */
 .stat-num {
-  font-size: 40rpx;
-  font-weight: 600;
+  font-size: 48rpx;
+  font-weight: 700;
   color: var(--primary-color);
 }
 
+/* 标签：灰色小字 */
 .stat-label {
   font-size: 24rpx;
   color: var(--text-tertiary);
-  margin-top: 8rpx;
+  margin-top: 12rpx;
 }
 
-/* 功能列表 */
+/* ==================== 功能菜单 ==================== */
+/* 每项为卡片：白底 + 24rpx圆角 */
 .menu-section {
-  background-color: var(--white);
-  margin: 20rpx;
-  border-radius: 16rpx;
+  background-color: var(--bg-card);
+  margin: 0 32rpx 32rpx;
+  border-radius: 24rpx;
   overflow: hidden;
+  box-shadow: var(--shadow);
 }
 
 .menu-item {
   display: flex;
   align-items: center;
-  padding: 30rpx;
+  padding: 32rpx;
   border-bottom: 1rpx solid var(--border-color);
 }
 
@@ -98,20 +113,24 @@
   border-bottom: none;
 }
 
+/* 左侧图标：主色 */
 .menu-icon {
-  width: 44rpx;
-  height: 44rpx;
-  margin-right: 20rpx;
+  width: 48rpx;
+  height: 48rpx;
+  margin-right: 24rpx;
+  filter: hue-rotate(240deg) saturate(2);
 }
 
+/* 右侧文字：正文级别32rpx */
 .menu-text {
   flex: 1;
-  font-size: 28rpx;
+  font-size: 32rpx;
   color: var(--text-primary);
+  font-weight: 500;
 }
 
 .menu-arrow {
-  width: 24rpx;
-  height: 24rpx;
-  opacity: 0.5;
+  width: 32rpx;
+  height: 32rpx;
+  opacity: 0.4;
 }

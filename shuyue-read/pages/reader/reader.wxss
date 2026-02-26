@@ -4,6 +4,7 @@
   width: 100vw;
   height: 100vh;
   position: relative;
+  background-color: #1E293B; /* 深色背景 */
 }
 
 web-view {
@@ -11,14 +12,14 @@ web-view {
   height: 100%;
 }
 
-/* 加载遮罩 */
+/* ==================== 加载遮罩 ==================== */
 .loading-mask {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #FFFFFF;
+  background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); /* 深色渐变背景 */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -31,11 +32,13 @@ web-view {
   align-items: center;
 }
 
+/* 加载动画 - 使用主题色 */
 .loading-spinner {
-  width: 60rpx;
-  height: 60rpx;
-  border: 4rpx solid #E5E5E5;
-  border-top-color: #4A90E2;
+  width: 80rpx;
+  height: 80rpx;
+  border: 6rpx solid rgba(255, 255, 255, 0.1);
+  border-top-color: #2E3BFF;
+  border-right-color: #5A4B99;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -45,19 +48,20 @@ web-view {
 }
 
 .loading-content text {
-  margin-top: 20rpx;
-  font-size: 28rpx;
-  color: #999999;
+  margin-top: 32rpx;
+  font-size: 30rpx;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
 }
 
-/* 错误遮罩 */
+/* ==================== 错误遮罩 ==================== */
 .error-mask {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #FFFFFF;
+  background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); /* 深色渐变背景 */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -68,18 +72,97 @@ web-view {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 0 60rpx;
+}
+
+.error-icon {
+  font-size: 120rpx;
+  margin-bottom: 32rpx;
 }
 
 .error-text {
-  font-size: 32rpx;
-  color: #333333;
-  margin-bottom: 30rpx;
+  font-size: 36rpx;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 48rpx;
+  text-align: center;
 }
 
+/* 重试按钮 - 主色渐变、24rpx圆角 */
 .btn-retry {
-  padding: 20rpx 60rpx;
-  background-color: #4A90E2;
+  padding: 28rpx 80rpx;
+  background: linear-gradient(135deg, #5A4B99 0%, #2E3BFF 100%);
   color: #FFFFFF;
-  border-radius: 44rpx;
+  border-radius: 24rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  border: none;
+  box-shadow: 0 8rpx 24rpx rgba(46, 59, 255, 0.3);
+  transition: all 0.3s;
+}
+
+.btn-retry:active {
+  opacity: 0.9;
+  transform: scale(0.98);
+}
+
+/* ==================== 页码指示器 ==================== */
+/* 底部居中、半透明黑 + 毛玻璃、白字、胶囊圆角 */
+.page-indicator {
+  position: fixed;
+  bottom: 60rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(20rpx);
+  -webkit-backdrop-filter: blur(20rpx);
+  padding: 16rpx 40rpx;
+  border-radius: 999rpx;
+  z-index: 50;
+}
+
+.page-indicator text {
   font-size: 28rpx;
+  color: #FFFFFF;
+  font-weight: 500;
+}
+
+/* ==================== 顶部导航 ==================== */
+/* 背景：主渐变、返回按钮：半透明白色块 */
+.reader-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg, #5A4B99 0%, #2E3BFF 100%);
+  padding: 60rpx 32rpx 24rpx;
+  display: flex;
+  align-items: center;
+  z-index: 50;
+}
+
+.reader-back-btn {
+  width: 72rpx;
+  height: 72rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10rpx);
+}
+
+.reader-back-icon {
+  font-size: 40rpx;
+  color: #FFFFFF;
+  font-weight: bold;
+}
+
+.reader-title {
+  flex: 1;
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #FFFFFF;
+  text-align: center;
+  margin-right: 72rpx;
 }

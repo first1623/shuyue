@@ -11,191 +11,270 @@
   justify-content: center;
   height: 100vh;
   color: var(--text-tertiary);
+  font-size: 32rpx;
 }
 
 .detail-content {
-  padding-bottom: 120rpx;
+  padding-bottom: 140rpx;
 }
 
-/* 封面区域 */
+/* ==================== 头部区域 ==================== */
+/* 背景：主渐变，返回箭头 + 标题白色 */
 .cover-section {
-  background: linear-gradient(180deg, var(--primary-color) 0%, var(--bg-color) 100%);
-  padding: 40rpx 0 60rpx;
+  background: var(--primary-gradient);
+  padding: 40rpx 0 80rpx;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 返回按钮 - 半透明白色块 */
+.back-btn {
+  position: absolute;
+  top: 40rpx;
+  left: 32rpx;
+  width: 72rpx;
+  height: 72rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
   justify-content: center;
+  backdrop-filter: blur(10rpx);
 }
 
+.back-icon {
+  font-size: 40rpx;
+  color: var(--text-white);
+  font-weight: bold;
+}
+
+/* 书籍封面 - 居中、大尺寸、24rpx圆角、带阴影 */
 .cover-image {
-  width: 280rpx;
-  height: 380rpx;
-  border-radius: 12rpx;
-  box-shadow: var(--shadow-lg);
-  background-color: var(--white);
+  width: 320rpx;
+  height: 440rpx;
+  border-radius: 24rpx;
+  box-shadow: 0 16rpx 48rpx rgba(0, 0, 0, 0.3);
+  background-color: var(--bg-card);
+  margin-top: 40rpx;
 }
 
-/* 基本信息 */
+/* ==================== 信息区 ==================== */
 .info-section {
-  background-color: var(--white);
-  padding: 30rpx;
-  margin-bottom: 20rpx;
+  background-color: var(--bg-card);
+  border-radius: 32rpx 32rpx 0 0;
+  padding: 40rpx 32rpx;
+  margin-top: -40rpx;
+  position: relative;
+  z-index: 10;
 }
 
+/* 标题：粗体大标题48rpx */
 .book-title {
   display: block;
-  font-size: 36rpx;
-  font-weight: 600;
+  font-size: 48rpx;
+  font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 16rpx;
-  line-height: 1.4;
+  margin-bottom: 20rpx;
+  line-height: 1.3;
 }
 
+/* 作者：灰色小字28rpx */
 .book-author {
   display: block;
-  font-size: 26rpx;
+  font-size: 28rpx;
   color: var(--text-secondary);
-  margin-bottom: 16rpx;
+  margin-bottom: 20rpx;
 }
 
 .book-meta {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 }
 
+/* 作者、页数、阅读量：灰色小字 */
 .meta-item {
   font-size: 24rpx;
   color: var(--text-tertiary);
-  margin-right: 30rpx;
+  margin-right: 32rpx;
+  display: flex;
+  align-items: center;
 }
 
-/* 简介 */
+.meta-item::before {
+  content: '';
+  display: inline-block;
+  width: 8rpx;
+  height: 8rpx;
+  background-color: var(--text-tertiary);
+  border-radius: 50%;
+  margin-right: 12rpx;
+}
+
+.meta-item:first-child::before {
+  display: none;
+}
+
+/* ==================== 简介区域 ==================== */
+/* 统一卡片：白底 + 24rpx圆角 */
 .desc-section {
-  background-color: var(--white);
-  padding: 30rpx;
-  margin-bottom: 20rpx;
+  background-color: var(--bg-card);
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin: 32rpx;
+  box-shadow: var(--shadow);
 }
 
+/* 区块标题：粗体小标题36rpx */
 .section-title {
   display: block;
-  font-size: 30rpx;
+  font-size: 36rpx;
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: 20rpx;
+  margin-bottom: 24rpx;
 }
 
 .book-desc {
-  font-size: 28rpx;
+  font-size: 30rpx;
   color: var(--text-secondary);
   line-height: 1.8;
   text-align: justify;
 }
 
-/* 操作按钮 */
+/* ==================== 试读区域 ==================== */
+.preview-section {
+  background-color: var(--bg-card);
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin: 32rpx;
+  box-shadow: var(--shadow);
+}
+
+/* 横向可滑动 */
+.preview-scroll {
+  white-space: nowrap;
+  height: 420rpx;
+}
+
+/* 试读图：16rpx圆角 */
+.preview-image {
+  display: inline-block;
+  width: 300rpx;
+  height: 400rpx;
+  margin-right: 24rpx;
+  border-radius: 16rpx;
+  background-color: #f0f0f0;
+  box-shadow: var(--shadow-light);
+}
+
+.preview-image:last-child {
+  margin-right: 0;
+}
+
+/* ==================== 操作按钮区域 ==================== */
 .action-section {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   display: flex;
-  padding: 20rpx 30rpx;
-  background-color: var(--white);
-  box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.05);
+  padding: 24rpx 32rpx;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+  background-color: var(--bg-card);
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.08);
   z-index: 100;
 }
 
+/* 收藏按钮：边框按钮、主色文字、24rpx圆角 */
 .btn-favorite {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--white);
+  background-color: var(--bg-card);
   border: 2rpx solid var(--primary-color);
-  border-radius: 44rpx;
-  padding: 20rpx 0;
-  margin-right: 20rpx;
+  border-radius: 24rpx;
+  padding: 28rpx 0;
+  margin-right: 24rpx;
+  transition: all 0.3s;
 }
 
 .btn-favorite .heart-icon {
-  font-size: 32rpx;
-  margin-right: 8rpx;
+  font-size: 36rpx;
+  margin-right: 12rpx;
 }
 
 .btn-favorite text {
   color: var(--primary-color);
-  font-size: 28rpx;
+  font-size: 32rpx;
+  font-weight: 600;
 }
 
 .btn-favorite.active {
-  background-color: #FFF0F0;
-  border-color: #FF6B6B;
+  background-color: rgba(46, 59, 255, 0.05);
+  border-color: var(--primary-color);
 }
 
 .btn-favorite.active text {
-  color: #FF6B6B;
+  color: var(--primary-color);
 }
 
+/* 阅读按钮：主色填充、白字、粗体、24rpx圆角 */
 .btn-read {
   flex: 2;
-  background-color: var(--primary-color);
-  border-radius: 44rpx;
-  padding: 20rpx 0;
+  background: var(--primary-gradient);
+  border-radius: 24rpx;
+  padding: 28rpx 0;
   text-align: center;
+  border: none;
+  box-shadow: 0 8rpx 24rpx rgba(46, 59, 255, 0.3);
+  transition: all 0.3s;
+}
+
+.btn-read:active {
+  opacity: 0.9;
+  transform: scale(0.98);
 }
 
 .btn-read text {
-  color: var(--white);
-  font-size: 28rpx;
-  font-weight: 500;
+  color: var(--text-white);
+  font-size: 32rpx;
+  font-weight: 600;
 }
 
-/* 试读 */
-.preview-section {
-  background-color: var(--white);
-  padding: 30rpx;
-}
-
-.preview-scroll {
-  white-space: nowrap;
-  height: 400rpx;
-}
-
-.preview-image {
-  display: inline-block;
-  width: 280rpx;
-  height: 380rpx;
-  margin-right: 20rpx;
-  border-radius: 8rpx;
-  background-color: #f0f0f0;
-}
-
-/* 翻页预览提示 */
+/* ==================== 翻页预览提示 ==================== */
 .preview-notice {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  margin: 20rpx;
-  border-radius: 16rpx;
-  padding: 40rpx;
+  background: var(--primary-gradient);
+  margin: 32rpx;
+  border-radius: 24rpx;
+  padding: 48rpx 40rpx;
   text-align: center;
+  box-shadow: var(--shadow);
 }
 
 .notice-title {
   display: block;
-  font-size: 32rpx;
+  font-size: 36rpx;
   font-weight: 600;
-  color: #fff;
+  color: var(--text-white);
   margin-bottom: 16rpx;
 }
 
 .notice-text {
   display: block;
-  font-size: 26rpx;
-  color: rgba(255,255,255,0.8);
-  margin-bottom: 30rpx;
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 32rpx;
 }
 
 .btn-preview {
-  background-color: #fff;
-  color: #667eea;
-  padding: 20rpx 60rpx;
-  border-radius: 40rpx;
-  font-size: 28rpx;
-  font-weight: 500;
+  background-color: var(--text-white);
+  color: var(--primary-color);
+  padding: 24rpx 72rpx;
+  border-radius: 999rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  border: none;
+  box-shadow: var(--shadow);
 }

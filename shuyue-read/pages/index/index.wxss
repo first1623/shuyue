@@ -1,17 +1,20 @@
 /* pages/index/index.wxss */
 
-/* 搜索栏 */
+/* ==================== 头部区域 ==================== */
+/* 头部区域 - 紫蓝渐变背景 */
 .search-bar {
-  background-color: var(--primary-color);
-  padding: 20rpx 30rpx 30rpx;
+  background: var(--primary-gradient);
+  padding: 20rpx 32rpx 40rpx;
 }
 
+/* 搜索框 - 白色胶囊 */
 .search-input-wrapper {
   display: flex;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.9);
-  border-radius: 40rpx;
-  padding: 16rpx 30rpx;
+  background-color: var(--bg-card);
+  border-radius: 999rpx;
+  padding: 20rpx 32rpx;
+  box-shadow: var(--shadow);
 }
 
 .search-icon {
@@ -25,55 +28,52 @@
   font-size: 28rpx;
 }
 
-/* 栏目导航 */
+/* ==================== 栏目导航 ==================== */
 .category-nav {
-  background-color: var(--white);
+  background-color: var(--bg-card);
   box-shadow: var(--shadow);
   position: sticky;
   top: 0;
   z-index: 100;
 }
 
+/* 横向可滑动 */
 .category-scroll {
   white-space: nowrap;
-  padding: 0 20rpx;
-  height: 88rpx;
+  padding: 0 32rpx;
+  height: 96rpx;
 }
 
+/* 分类标签 - 胶囊形态 */
 .category-item {
-  display: inline-block;
-  padding: 24rpx 32rpx;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16rpx 32rpx;
+  margin: 16rpx 8rpx;
   font-size: 28rpx;
   color: var(--text-secondary);
-  position: relative;
-  transition: color 0.3s;
+  background-color: #F3F4F6;
+  border-radius: 16rpx;
+  transition: all 0.3s;
 }
 
+/* 选中状态 - 主色背景+白字 */
 .category-item.active {
-  color: var(--primary-color);
+  background: var(--primary-gradient);
+  color: var(--text-white);
   font-weight: 600;
+  box-shadow: 0 4rpx 12rpx rgba(46, 59, 255, 0.3);
 }
 
-.category-item.active::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 48rpx;
-  height: 6rpx;
-  background-color: var(--primary-color);
-  border-radius: 3rpx;
-}
-
-/* PDF列表 */
+/* ==================== PDF列表区域 ==================== */
 .pdf-list {
-  height: calc(100vh - 88rpx - 88rpx - 80rpx);
-  padding: 20rpx;
+  height: calc(100vh - 96rpx - 100rpx);
+  padding: 32rpx;
   box-sizing: border-box;
 }
 
-/* 骨架屏 */
+/* ==================== 骨架屏 ==================== */
 .skeleton-list {
   display: flex;
   flex-wrap: wrap;
@@ -81,12 +81,13 @@
 }
 
 .skeleton-card {
-  width: 48%;
-  background-color: var(--white);
-  border-radius: 16rpx;
+  width: calc(50% - 16rpx);
+  background-color: var(--bg-card);
+  border-radius: 24rpx;
   overflow: hidden;
-  margin-bottom: 20rpx;
-  padding-bottom: 20rpx;
+  margin-bottom: 32rpx;
+  padding-bottom: 24rpx;
+  box-shadow: var(--shadow);
 }
 
 .skeleton-cover {
@@ -117,19 +118,25 @@
   border-radius: 4rpx;
 }
 
-/* PDF卡片 */
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ==================== PDF卡片 ==================== */
 .pdf-cards {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
 }
 
+/* 卡片 - 白底24rpx圆角阴影 */
 .pdf-card {
-  width: 48%;
-  background-color: var(--white);
-  border-radius: 16rpx;
+  width: calc(50% - 16rpx);
+  background-color: var(--bg-card);
+  border-radius: 24rpx;
   overflow: hidden;
-  margin-bottom: 20rpx;
+  margin-bottom: 32rpx;
   box-shadow: var(--shadow);
   transition: transform 0.3s, box-shadow 0.3s;
 }
@@ -139,30 +146,36 @@
   box-shadow: var(--shadow-lg);
 }
 
+/* 封面图 - 充满宽度16rpx圆角 */
 .pdf-cover {
   width: 100%;
   height: 280rpx;
   background-color: #f0f0f0;
+  border-radius: 16rpx;
+  margin: 16rpx 16rpx 0 16rpx;
+  width: calc(100% - 32rpx);
 }
 
 .pdf-info {
-  padding: 16rpx 20rpx;
+  padding: 24rpx;
 }
 
+/* 标题 - 36rpx粗体 */
 .pdf-title {
   display: block;
-  font-size: 28rpx;
+  font-size: 32rpx;
   font-weight: 600;
   color: var(--text-primary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin-bottom: 8rpx;
+  margin-bottom: 12rpx;
 }
 
+/* 作者/页数 - 28rpx灰色 */
 .pdf-author {
   display: block;
-  font-size: 24rpx;
+  font-size: 26rpx;
   color: var(--text-secondary);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -172,19 +185,19 @@
 
 .pdf-pages {
   display: block;
-  font-size: 22rpx;
+  font-size: 24rpx;
   color: var(--text-tertiary);
 }
 
-/* 加载更多 */
+/* ==================== 加载更多 ==================== */
 .loading-more {
   text-align: center;
-  padding: 30rpx;
+  padding: 40rpx;
   color: var(--text-tertiary);
   font-size: 24rpx;
 }
 
-/* 数据库错误状态 */
+/* ==================== 数据库错误状态 ==================== */
 .db-error-state {
   display: flex;
   flex-direction: column;
@@ -214,8 +227,8 @@
 
 .error-steps {
   background-color: #FFF8E7;
-  border-radius: 16rpx;
-  padding: 30rpx;
+  border-radius: 24rpx;
+  padding: 32rpx;
   margin-bottom: 40rpx;
   text-align: left;
   width: 100%;
@@ -245,14 +258,17 @@
 }
 
 .btn-retry {
-  background-color: var(--primary-color);
-  color: var(--white);
-  padding: 20rpx 60rpx;
-  border-radius: 44rpx;
+  background: var(--primary-gradient);
+  color: var(--text-white);
+  padding: 24rpx 80rpx;
+  border-radius: 24rpx;
   font-size: 28rpx;
+  font-weight: 600;
+  border: none;
+  box-shadow: var(--shadow);
 }
 
-/* 空状态 */
+/* ==================== 空状态 ==================== */
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -271,4 +287,15 @@
 .empty-state text {
   color: var(--text-tertiary);
   font-size: 28rpx;
+}
+
+.debug-btn {
+  background: var(--primary-gradient);
+  color: var(--text-white);
+  padding: 20rpx 60rpx;
+  border-radius: 24rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  border: none;
+  margin-top: 40rpx;
 }

@@ -1,0 +1,39 @@
+// 批量导入报告数据
+const reportsData = [
+  {
+    reportId: 'report_carbon_001',
+    title: '2024年中国碳中和实施路径研究报告',
+    author: '碳中和研究院',
+    icon: '📑',
+    themeIds: ['carbon'],
+    categoryIds: ['0ee59149699aa8cd015ec6a51e9fe3b1', '0ee59149699aa8cd015ec6a61793c14b', '0ee5914969a07ac601e08d0a0f194b98', '012ace5f69a07ac601e3abad2634de30'],
+    pages: 128,
+    type: '研究报告',
+    description: '全面分析中国碳中和目标的实施路径与关键举措',
+    publishDate: '2024-01',
+    viewCount: 1250,
+    downloadCount: 368,
+    status: true
+  },
+  // ... 更多数据
+];
+
+async function importReports() {
+  const db = wx.cloud.database();
+  
+  for (const report of reportsData) {
+    try {
+      await db.collection('reports').add({
+        data: {
+          ...report,
+          createTime: db.serverDate()
+        }
+      });
+      console.log(`导入成功: ${report.title}`);
+    } catch (err) {
+      console.error(`导入失败: ${report.title}`, err);
+    }
+  }
+}
+
+importReports();

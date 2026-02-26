@@ -12,14 +12,14 @@
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#4A90E2",
+    "navigationBarBackgroundColor": "#2E3BFF",
     "navigationBarTitleText": "沐禾智心",
     "navigationBarTextStyle": "white",
     "backgroundColor": "#F5F7FA"
   },
   "tabBar": {
     "color": "#999999",
-    "selectedColor": "#4A90E2",
+    "selectedColor": "#2E3BFF",
     "backgroundColor": "#ffffff",
     "borderStyle": "white",
     "list": [
