@@ -1,0 +1,167 @@
+<view class="theme-subscription-page">
+  <!-- 状态栏占位 -->
+  <view class="status-bar" style="height: {{statusBarHeight}}px;"></view>
+  
+  <!-- 上半部分：漂浮主题区域 -->
+  <view class="upper-section">
+    <!-- 渐变背景 -->
+    <view class="gradient-bg"></view>
+    
+    <!-- 科技感网格纹理 -->
+    <view class="grid-overlay"></view>
+    
+    <!-- 无线信号波纹 -->
+    <view class="ripple-container">
+      <view class="ripple ripple-1"></view>
+      <view class="ripple ripple-2"></view>
+      <view class="ripple ripple-3"></view>
+      <view class="ripple ripple-4"></view>
+    </view>
+    
+    <!-- 顶部标签 -->
+    <view class="top-badge">
+      <text class="badge-text">{{themeCount}} 个行业主题已上线</text>
+    </view>
+    
+    <!-- 关闭按钮 -->
+    <view class="close-btn" bindtap="onClose">
+      <text class="close-icon">×</text>
+    </view>
+    
+    <!-- 漂浮主题图标 -->
+    <view class="floating-themes-container">
+      <view 
+        wx:for="{{themes}}" 
+        wx:key="id"
+        class="theme-float-item {{selectedThemeId === item.id ? 'selected' : ''}} {{item.position}}"
+        style="animation-delay: {{item.delay}}s;"
+        bindtap="onThemeSelect"
+        data-id="{{item.id}}"
+      >
+        <view class="theme-icon-wrapper" style="background: {{item.color}};">
+          <text wx:if="{{item.iconType === 'emoji'}}" class="theme-icon-emoji">{{item.icon}}</text>
+          <image wx:else class="theme-icon" src="{{item.icon}}" mode="aspectFit"/>
+        </view>
+        <text class="theme-name-float">{{item.shortName}}</text>
+      </view>
+    </view>
+    
+    <!-- 中央WiFi信号图标 -->
+    <view class="center-signal">
+      <view class="signal-circle">
+        <view class="wifi-icon">
+          <view class="wifi-arc wifi-arc-1"></view>
+          <view class="wifi-arc wifi-arc-2"></view>
+          <view class="wifi-arc wifi-arc-3"></view>
+          <view class="wifi-dot"></view>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 核心文案 -->
+    <view class="main-text">
+      <text class="main-title">订阅专属主题</text>
+      <text class="sub-title">点击漂浮主题查看详情，或滑动下方卡片完成订阅</text>
+    </view>
+  </view>
+  
+  <!-- 下半部分：卡片轮询区域 -->
+  <view class="lower-section">
+    <view class="cards-container">
+      <!-- 左侧半张卡片 -->
+      <view 
+        class="half-card left-half" 
+        wx:if="{{currentIndex > 0}}"
+        style="background: {{themes[currentIndex - 1].lightColor}};"
+      >
+        <view class="half-card-content">
+          <view class="theme-icon-small" style="background: {{themes[currentIndex - 1].color}};">
+            <text wx:if="{{themes[currentIndex - 1].iconType === 'emoji'}}" class="icon-emoji-small">{{themes[currentIndex - 1].icon}}</text>
+            <image wx:else src="{{themes[currentIndex - 1].icon}}" mode="aspectFit"/>
+          </view>
+          <text class="half-card-name">{{themes[currentIndex - 1].name}}</text>
+        </view>
+      </view>
+      
+      <!-- 主卡片轮播 -->
+      <swiper 
+        class="theme-swiper"
+        current="{{currentIndex}}"
+        bindchange="onSwiperChange"
+        previous-margin="60rpx"
+        next-margin="60rpx"
+        display-multiple-items="1"
+      >
+        <swiper-item 
+          wx:for="{{themes}}" 
+          wx:key="id"
+          class="swiper-item"
+        >
+          <view class="theme-card">
+            <!-- 卡片顶部 -->
+            <view class="card-header">
+            <view class="theme-icon-large" style="background: {{item.color}};">
+              <text wx:if="{{item.iconType === 'emoji'}}" class="icon-emoji-large">{{item.icon}}</text>
+              <image wx:else src="{{item.icon}}" mode="aspectFit"/>
+            </view>
+              <view class="theme-info">
+                <text class="theme-title">{{item.name}}</text>
+                <view class="theme-tags">
+                  <text wx:for="{{item.tags}}" wx:for-item="tag" wx:key="*this" class="tag">{{tag}}</text>
+                </view>
+              </view>
+            </view>
+            
+            <!-- 卡片中部：简介 -->
+            <view class="card-body">
+              <text class="theme-desc">{{item.description}}</text>
+            </view>
+            
+            <!-- 卡片底部：订阅按钮 -->
+            <view class="card-footer">
+              <view 
+                class="subscribe-btn {{item.isSubscribed ? 'subscribed' : ''}}"
+                style="background: {{item.isSubscribed ? '#ccc' : item.color}};"
+                bindtap="onSubscribe"
+                data-id="{{item.id}}"
+              >
+                <text class="btn-text">{{item.isSubscribed ? '已订阅' : '立即订阅'}}</text>
+                <text class="btn-arrow" wx:if="{{!item.isSubscribed}}">→</text>
+              </view>
+            </view>
+          </view>
+        </swiper-item>
+      </swiper>
+      
+      <!-- 右侧半张卡片 -->
+      <view 
+        class="half-card right-half" 
+        wx:if="{{currentIndex < themes.length - 1}}"
+        style="background: {{themes[currentIndex + 1].lightColor}};"
+      >
+        <view class="half-card-content">
+          <view class="theme-icon-small" style="background: {{themes[currentIndex + 1].color}};">
+            <text wx:if="{{themes[currentIndex + 1].iconType === 'emoji'}}" class="icon-emoji-small">{{themes[currentIndex + 1].icon}}</text>
+            <image wx:else src="{{themes[currentIndex + 1].icon}}" mode="aspectFit"/>
+          </view>
+          <text class="half-card-name">{{themes[currentIndex + 1].name}}</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 剩余数量提示 -->
+    <view class="more-hint" wx:if="{{remainingCount > 0}}">
+      <text class="more-text">还有 {{remainingCount}} 个</text>
+    </view>
+    
+    <!-- 指示器 -->
+    <view class="indicators">
+      <view 
+        wx:for="{{themes}}" 
+        wx:key="id"
+        class="dot {{currentIndex === index ? 'active' : ''}}"
+        style="background: {{currentIndex === index ? themes[index].color : '#ddd'}};"
+      ></view>
+    </view>
+  </view>
+</view>

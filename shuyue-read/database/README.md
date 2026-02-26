@@ -80,6 +80,8 @@
 | nickName | string | 否 | 用户昵称 |
 | favorites | array | 是 | 收藏的PDF ID列表，默认为空数组 |
 | readingHistory | array | 是 | 阅读历史记录 |
+| subscribedThemes | array | 是 | 订阅的主题ID列表，默认为空数组 |
+| updateTime | date | 是 | 更新时间 |
 | createTime | date | 是 | 创建时间 |
 
 **readingHistory 数组元素结构：**
@@ -90,6 +92,9 @@
   "updateTime": "2024-01-15T10:30:00.000Z"
 }
 ```
+
+**subscribedThemes 数组：**
+用户订阅的主题ID列表，如 `["carbon", "power", "digital-gov"]`
 
 **示例数据：**
 ```json
@@ -106,6 +111,70 @@
       "updateTime": "2024-01-15T10:30:00.000Z"
     }
   ],
+  "subscribedThemes": ["carbon", "power"],
+  "updateTime": "2024-01-15T10:30:00.000Z",
+  "createTime": "2024-01-01T00:00:00.000Z"
+}
+```
+
+### 4. `subscription_logs` - 主题订阅日志表
+
+记录用户的主题订阅行为，用于数据分析和运营。
+
+| 字段 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| _id | string | 是 | 自动生成 |
+| userId | string | 是 | 用户ID（users表_id） |
+| openId | string | 是 | 微信openid |
+| themeId | string | 是 | 订阅的主题ID |
+| subscribeTime | date | 是 | 订阅时间 |
+| createTime | date | 是 | 记录创建时间 |
+
+**示例数据：**
+```json
+{
+  "_id": "sub001",
+  "userId": "user001",
+  "openId": "oXXXX...",
+  "themeId": "carbon",
+  "subscribeTime": "2024-01-15T10:30:00.000Z",
+  "createTime": "2024-01-15T10:30:00.000Z"
+}
+```
+
+### 5. `themes` - 主题配置表（可选）
+
+存储主题的基本配置信息，用于后台管理。
+
+| 字段 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| _id | string | 是 | 自动生成 |
+| themeId | string | 是 | 主题唯一标识（如 carbon, power） |
+| name | string | 是 | 主题名称 |
+| shortName | string | 是 | 简称 |
+| color | string | 是 | 主题色（如 #10B981） |
+| lightColor | string | 是 | 浅色背景色 |
+| icon | string | 是 | 图标URL或emoji |
+| tags | array | 是 | 主题标签 |
+| description | string | 是 | 主题描述 |
+| sort | number | 是 | 排序权重 |
+| status | boolean | 是 | 是否启用 |
+| createTime | date | 是 | 创建时间 |
+
+**示例数据：**
+```json
+{
+  "_id": "theme001",
+  "themeId": "carbon",
+  "name": "碳中和",
+  "shortName": "碳中和",
+  "color": "#10B981",
+  "lightColor": "rgba(16, 185, 129, 0.15)",
+  "icon": "🌿",
+  "tags": ["绿色发展", "环保领域"],
+  "description": "双碳目标政策解读与企业碳中和实施路径",
+  "sort": 1,
+  "status": true,
   "createTime": "2024-01-01T00:00:00.000Z"
 }
 ```
