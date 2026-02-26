@@ -1,0 +1,25 @@
+<!--pages/reader/reader.wxml-->
+<view class="reader-container">
+  <web-view 
+    src="{{flipbookUrl}}" 
+    bindmessage="onMessage"
+    bindload="onWebViewLoad"
+    binderror="onWebViewError">
+  </web-view>
+  
+  <!-- 加载状态 -->
+  <view class="loading-mask" wx:if="{{loading}}">
+    <view class="loading-content">
+      <view class="loading-spinner"></view>
+      <text>正在加载...</text>
+    </view>
+  </view>
+  
+  <!-- 错误提示 -->
+  <view class="error-mask" wx:if="{{error}}">
+    <view class="error-content">
+      <text class="error-text">加载失败</text>
+      <button class="btn-retry" bindtap="retryLoad">重试</button>
+    </view>
+  </view>
+</view>

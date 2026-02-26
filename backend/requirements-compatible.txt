@@ -1,0 +1,52 @@
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+
+# 使用 pure-python 版本的 PostgreSQL 适配器，避免编译问题
+sqlalchemy==2.0.23
+alembic==1.12.1
+psycopg==3.1.18  # 替代 psycopg2-binary，纯Python实现
+
+# 其他数据库（不需要编译）
+neo4j==5.12.0
+redis==5.0.1
+celery==5.3.4
+
+# 核心库（纯Python或已有wheel）
+pydantic==2.5.0
+pydantic-settings==2.1.0
+python-docx==1.1.0
+PyPDF2==3.0.1
+pdfplumber==0.10.3
+beautifulsoup4==4.12.2
+requests==2.31.0
+
+# AI相关（可选，如果安装失败可以先跳过）
+# transformers==4.36.2  # 注释掉，需要时再安装
+torch==2.1.2
+celeery[redis]==5.3.4
+python-dotenv==1.0.0
+cryptography==41.0.8
+passlib[bcrypt]==1.7.4
+python-jose[cryptography]==3.3.0
+Pillow==10.1.0
+opencv-python==4.8.1.78
+numpy==1.24.3
+scikit-learn==1.3.2
+pandas==2.1.3
+matplotlib==3.8.2
+seaborn==0.13.0
+networkx==3.2.1
+plotly==5.17.0
+weasyprint==59.0
+fpdf2==2.7.6
+markdown==3.5.1
+bleach==6.0.0
+
+# LangChain相关（可选）
+# langchain==0.0.352  # 注释掉，需要时再安装
+# langchain-community==0.0.10
+# langchain-core==0.1.10
+tiktoken==0.5.2
+tenacity==8.2.3
+eval-type>=0.2.2

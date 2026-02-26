@@ -1,0 +1,32 @@
+/* KnowledgeTree 页面样式 */
+.knowledge-tree-page {
+  padding: 0;
+}
+
+.knowledge-tree-page .toolbar-card {
+  margin-bottom: 16px;
+}
+
+.knowledge-tree-page .tree-card {
+  min-height: 500px;
+}
+
+.knowledge-tree-page .tree-node-title {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.knowledge-tree-page .tree-node-title .highlight {
+  background-color: #ffe58f;
+  border-radius: 2px;
+}
+
+.knowledge-tree-page .details-card {
+  position: sticky;
+  top: 16px;
+}
+
+.knowledge-tree-page .node-details {
+  font-size: 13px;
+}

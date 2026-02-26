@@ -1,0 +1,79 @@
+<!--pages/flipbook/flipbook.wxml-->
+<view class="flipbook-container">
+  <!-- 加载遮罩 -->
+  <view class="loading-mask" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <view class="loading-text">正在加载...</view>
+  </view>
+
+  <!-- 书本容器 -->
+  <view class="book-stage" wx:if="{{!loading && images.length > 0}}">
+    
+    <!-- 当前页 -->
+    <view class="current-page" wx:if="{{!isFlipping}}">
+      <image 
+        src="{{images[currentIndex]}}" 
+        mode="widthFix" 
+        class="page-image"
+      ></image>
+    </view>
+    
+    <!-- 翻页动画层 -->
+    <view class="flip-container" wx:if="{{isFlipping}}">
+      <!-- 翻出的页（下一页） -->
+      <view 
+        class="flipping-page next-page" 
+        style="transform: rotateY({{flipAngle}}deg);"
+      >
+        <image 
+          src="{{images[nextIndex]}}" 
+          mode="widthFix" 
+          class="page-image"
+        ></image>
+        <view class="page-shadow"></view>
+      </view>
+      
+      <!-- 被翻走的页（当前页） -->
+      <view 
+        class="flipping-page current-page-flip" 
+        style="transform: rotateY({{currentAngle}}deg);"
+        wx:if="{{showCurrentFlip}}"
+      >
+        <image 
+          src="{{images[currentIndex]}}" 
+          mode="widthFix" 
+          class="page-image"
+        ></image>
+        <view class="page-shadow-flip"></view>
+      </view>
+    </view>
+    
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{!loading && images.length === 0}}">
+    <text style="font-size: 80rpx; margin-bottom: 20rpx;">📚</text>
+    <text>暂无内容</text>
+  </view>
+
+  <!-- 点击区域 -->
+  <view class="click-area area-left" bindtap="prevPage" wx:if="{{currentIndex > 0}}"></view>
+  <view class="click-area area-right" bindtap="nextPage" wx:if="{{currentIndex < images.length - 1}}"></view>
+
+  <!-- 底部工具栏 -->
+  <view class="toolbar" wx:if="{{images.length > 0}}">
+    <view class="page-info">
+      <text>{{currentIndex + 1}} / {{images.length}}</text>
+    </view>
+  </view>
+
+  <!-- 提示 -->
+  <view class="hint" wx:if="{{showHint}}">
+    <text>← 点击左右翻页 →</text>
+  </view>
+
+  <!-- 返回按钮 -->
+  <view class="back-btn" bindtap="goBack">
+    <text>← 返回</text>
+  </view>
+</view>

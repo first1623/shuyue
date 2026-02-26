@@ -1,0 +1,243 @@
+/* pages/flipbook/flipbook.wxss */
+page {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+}
+
+.flipbook-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* 加载遮罩 */
+.loading-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.loading-spinner {
+  width: 60rpx;
+  height: 60rpx;
+  border: 6rpx solid rgba(255,255,255,0.2);
+  border-top-color: #4A90E2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  color: #fff;
+  margin-top: 30rpx;
+  font-size: 32rpx;
+}
+
+/* 舞台 */
+.book-stage {
+  width: 90%;
+  height: 80%;
+  position: relative;
+  perspective: 1500rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 当前页 */
+.current-page {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background: #fff;
+  border-radius: 16rpx;
+  box-shadow: 
+    0 10rpx 40rpx rgba(0,0,0,0.4),
+    inset 0 0 60rpx rgba(0,0,0,0.05);
+  overflow: auto;
+  position: relative;
+}
+
+.current-page::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to right, 
+    rgba(0,0,0,0.03) 0%, 
+    transparent 20%, 
+    transparent 80%, 
+    rgba(0,0,0,0.03) 100%);
+  pointer-events: none;
+}
+
+/* 翻页容器 */
+.flip-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  perspective: 1500rpx;
+}
+
+/* 翻页中的页面 */
+.flipping-page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  background: #fff;
+  border-radius: 16rpx;
+  box-shadow: 0 10rpx 40rpx rgba(0,0,0,0.4);
+  overflow: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+/* 下一页（翻入） */
+.next-page {
+  transform-origin: left center;
+  z-index: 10;
+}
+
+/* 当前页（翻出） */
+.current-page-flip {
+  transform-origin: right center;
+  z-index: 5;
+}
+
+/* 页面图片 */
+.page-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 页面阴影 */
+.page-shadow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, 
+    rgba(0,0,0,0.2) 0%, 
+    transparent 30%);
+  pointer-events: none;
+}
+
+.page-shadow-flip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to left, 
+    rgba(0,0,0,0.2) 0%, 
+    transparent 30%);
+  pointer-events: none;
+}
+
+/* 点击区域 */
+.click-area {
+  position: absolute;
+  top: 20%;
+  width: 30%;
+  height: 60%;
+  z-index: 50;
+}
+
+.area-left {
+  left: 0;
+}
+
+.area-right {
+  right: 0;
+}
+
+/* 空状态 */
+.empty-state {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 32rpx;
+}
+
+/* 底部工具栏 */
+.toolbar {
+  position: absolute;
+  bottom: 60rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(10rpx);
+  color: #fff;
+  padding: 20rpx 60rpx;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+  z-index: 100;
+}
+
+/* 提示 */
+.hint {
+  position: absolute;
+  bottom: 140rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(10rpx);
+  color: #fff;
+  padding: 16rpx 40rpx;
+  border-radius: 30rpx;
+  font-size: 26rpx;
+  animation: fadeInOut 3s ease forwards;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* 返回按钮 */
+.back-btn {
+  position: absolute;
+  top: 60rpx;
+  left: 30rpx;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(10rpx);
+  color: #fff;
+  padding: 16rpx 30rpx;
+  border-radius: 30rpx;
+  font-size: 28rpx;
+  z-index: 100;
+}

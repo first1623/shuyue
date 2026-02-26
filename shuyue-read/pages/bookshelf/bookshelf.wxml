@@ -1,0 +1,86 @@
+<!--pages/bookshelf/bookshelf.wxml-->
+<view class="container">
+  <!-- 最近阅读 -->
+  <view class="section" wx:if="{{recentRead.length > 0}}">
+    <view class="section-header">
+      <text class="section-title">最近阅读</text>
+    </view>
+    <scroll-view 
+      class="book-scroll" 
+      scroll-x 
+      enable-flex>
+      <view 
+        wx:for="{{recentRead}}" 
+        wx:key="pdfId" 
+        class="book-item"
+        bindtap="continueReading"
+        data-id="{{item.pdfId}}"
+        data-page="{{item.page}}">
+        <image class="book-cover" src="{{item.cover}}" mode="aspectFill" lazy-load></image>
+        <text class="book-title">{{item.title}}</text>
+        <text class="book-progress">读到第 {{item.page}} 页</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 我的收藏 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">我的收藏</text>
+      <text class="section-count" wx:if="{{favorites.length > 0}}">{{favorites.length}} 本</text>
+    </view>
+    
+    <view wx:if="{{loading}}" class="loading-state">
+      <text>加载中...</text>
+    </view>
+    
+    <view wx:elif="{{favorites.length === 0}}" class="empty-state">
+      <image src="/assets/icons/empty-favorite.png" mode="aspectFit"></image>
+      <text>暂无收藏</text>
+      <button class="btn-primary mt-20" bindtap="goToIndex">去首页逛逛</button>
+    </view>
+    
+    <scroll-view 
+      wx:else
+      class="book-scroll" 
+      scroll-x 
+      enable-flex>
+      <view 
+        wx:for="{{favorites}}" 
+        wx:key="_id" 
+        class="book-item"
+        bindtap="goToDetail"
+        data-id="{{item._id}}">
+        <image class="book-cover" src="{{item.cover}}" mode="aspectFill" lazy-load></image>
+        <text class="book-title">{{item.title}}</text>
+        <text class="book-author">{{item.author}}</text>
+        <view class="book-remove" catchtap="removeFavorite" data-id="{{item._id}}">
+          <image src="/assets/icons/remove.png" mode="aspectFit"></image>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 阅读历史 -->
+  <view class="section" wx:if="{{readingHistory.length > 0}}">
+    <view class="section-header">
+      <text class="section-title">阅读记录</text>
+    </view>
+    <view class="history-list">
+      <view 
+        wx:for="{{readingHistory}}" 
+        wx:key="pdfId" 
+        class="history-item"
+        bindtap="continueReading"
+        data-id="{{item.pdfId}}"
+        data-page="{{item.page}}">
+        <image class="history-cover" src="{{item.cover}}" mode="aspectFill" lazy-load></image>
+        <view class="history-info">
+          <text class="history-title">{{item.title}}</text>
+          <text class="history-time">上次阅读：{{item.updateTime}}</text>
+        </view>
+        <view class="history-badge">继续阅读</view>
+      </view>
+    </view>
+  </view>
+</view>

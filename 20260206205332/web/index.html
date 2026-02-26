@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心理Z导航 - 公众号内容管理系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .nav {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .nav-item:hover {
+            background: #e9ecef;
+            color: #667eea;
+        }
+
+        .nav-item.active {
+            background: white;
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .article-preview {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .article-preview h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .article-preview .meta {
+            color: #6c757d;
+            font-size: 14px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .record-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #28a745;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .record-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .record-item.failed {
+            border-left-color: #dc3545;
+        }
+
+        .record-item .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .record-item .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .record-item .status.failed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+        }
+
+        .loading.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .status-item {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .status-item .label {
+            font-size: 12px;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+
+        .status-item .value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .status-item .value.ok {
+            color: #28a745;
+        }
+
+        .status-item .value.error {
+            color: #dc3545;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>心理Z导航</h1>
+            <p>公众号智能内容生成与发布系统</p>
+        </div>
+
+        <div class="nav">
+            <div class="nav-item active" data-section="quick-publish">快速发布</div>
+            <div class="nav-item" data-section="preview">生成预览</div>
+            <div class="nav-item" data-section="batch">批量发布</div>
+            <div class="nav-item" data-section="records">发布记录</div>
+            <div class="nav-item" data-section="config">系统配置</div>
+        </div>
+
+        <div class="content">
+            <!-- 快速发布 -->
+            <div class="section active" id="quick-publish">
+                <div class="status-bar">
+                    <div class="status-item">
+                        <div class="label">AI服务</div>
+                        <div class="value ok" id="ai-status">✓ DeepSeek</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="label">微信API</div>
+                        <div class="value ok" id="wechat-status">✓ 已连接</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="label">今日发布</div>
+                        <div class="value" id="today-count">0</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>文章主题</label>
+                    <input type="text" id="quick-theme" placeholder="例如：如何缓解焦虑情绪">
+                </div>
+
+                <div class="form-group">
+                    <label>生成配图</label>
+                    <select id="quick-image">
+                        <option value="no">不生成配图</option>
+                        <option value="yes">生成配图</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-primary" onclick="quickPublish()">
+                    🚀 立即发布
+                </button>
+            </div>
+
+            <!-- 生成预览 -->
+            <div class="section" id="preview">
+                <div class="form-group">
+                    <label>文章主题</label>
+                    <input type="text" id="preview-theme" placeholder="例如：心理健康的5个建议">
+                </div>
+
+                <div class="form-group">
+                    <label>生成配图</label>
+                    <select id="preview-image">
+                        <option value="no">不生成配图</option>
+                        <option value="yes">生成配图</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-primary" onclick="generatePreview()">
+                    ✨ 生成内容
+                </button>
+
+                <div id="preview-content" style="display:none;">
+                    <div class="article-preview">
+                        <h2 id="preview-title"></h2>
+                        <div class="meta">
+                            <span id="preview-author"></span> |
+                            <span id="preview-date"></span>
+                        </div>
+                        <div id="preview-body"></div>
+                    </div>
+                    <br>
+                    <button class="btn btn-success" onclick="publishPreview()">
+                        ✓ 确认发布
+                    </button>
+                    <button class="btn btn-secondary" onclick="regeneratePreview()">
+                        ↻ 重新生成
+                    </button>
+                </div>
+            </div>
+
+            <!-- 批量发布 -->
+            <div class="section" id="batch">
+                <div class="form-group">
+                    <label>主题列表（多个主题用逗号分隔）</label>
+                    <textarea id="batch-themes" placeholder="例如：
+如何建立积极心态
+心理健康的5个建议
+缓解焦虑的实用方法"></textarea>
+                </div>
+
+                <button class="btn btn-primary" onclick="batchPublish()">
+                    📦 批量发布
+                </button>
+
+                <div id="batch-progress" style="display:none; margin-top:20px;">
+                    <div style="background:#e9ecef; padding:15px; border-radius:10px;">
+                        <h3 id="batch-status">正在处理...</h3>
+                        <div id="batch-current"></div>
+                        <div style="margin-top:10px; background:#dee2e6; height:10px; border-radius:5px;">
+                            <div id="progress-bar" style="width:0%; height:100%; background:#667eea; border-radius:5px; transition:width 0.3s;"></div>
+                        </div>
+                        <div id="batch-results" style="margin-top:15px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 发布记录 -->
+            <div class="section" id="records">
+                <div style="margin-bottom:20px;">
+                    <button class="btn btn-secondary" onclick="refreshRecords()">
+                        🔄 刷新记录
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearRecords()">
+                        🗑️ 清空记录
+                    </button>
+                </div>
+                <div id="records-list">
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                        </svg>
+                        <p>暂无发布记录</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 系统配置 -->
+            <div class="section" id="config">
+                <div style="background:#f8f9fa; padding:20px; border-radius:10px; margin-bottom:20px;">
+                    <h3 style="color:#495057; margin-bottom:15px;">AI服务配置</h3>
+                    <div class="form-group">
+                        <label>AI服务提供商</label>
+                        <select id="ai-provider">
+                            <option value="deepseek" selected>DeepSeek（推荐）</option>
+                            <option value="openai">OpenAI</option>
+                            <option value="qwen">通义千问</option>
+                            <option value="moonshot">月之暗面</option>
+                            <option value="zhipu">智谱AI</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>API Key</label>
+                        <input type="password" id="api-key" value="sk-da148d8754654fb1b56aab9b3b23d0f3">
+                    </div>
+                </div>
+
+                <div style="background:#f8f9fa; padding:20px; border-radius:10px; margin-bottom:20px;">
+                    <h3 style="color:#495057; margin-bottom:15px;">微信公众号配置</h3>
+                    <div class="form-group">
+                        <label>AppID</label>
+                        <input type="text" id="wechat-appid" value="wxa6c8e7abade65a17">
+                    </div>
+                    <div class="form-group">
+                        <label>AppSecret</label>
+                        <input type="password" id="wechat-secret" value="4661ddd36998a44cc1c0c5dcf091eeee">
+                    </div>
+                    <button class="btn btn-primary" onclick="testConfig()">
+                        🔍 测试连接
+                    </button>
+                    <button class="btn btn-success" onclick="saveConfig()">
+                        💾 保存配置
+                    </button>
+                </div>
+
+                <div style="background:#f8f9fa; padding:20px; border-radius:10px;">
+                    <h3 style="color:#495057; margin-bottom:15px;">图片生成配置</h3>
+                    <div class="form-group">
+                        <label>图片生成引擎</label>
+                        <select id="image-engine">
+                            <option value="none" selected>不生成图片</option>
+                            <option value="stable-diffusion">Stable Diffusion</option>
+                            <option value="dall-e-3">DALL-E 3</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <div id="loading-text">正在处理...</div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

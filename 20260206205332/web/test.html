@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API 测试</title>
+</head>
+<body>
+    <h1>API 连接测试</h1>
+    <button onclick="testAPI()">测试连接</button>
+    <div id="result"></div>
+
+    <script>
+        async function testAPI() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '正在测试...';
+
+            try {
+                // 测试 GET 请求
+                const response = await fetch('/api/status');
+                const data = await response.json();
+                resultDiv.innerHTML += '<br>GET /api/status 成功: ' + JSON.stringify(data);
+            } catch (error) {
+                resultDiv.innerHTML += '<br>GET 请求失败: ' + error.message;
+            }
+
+            try {
+                // 测试 POST 请求
+                const response = await fetch('/api/test_config', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'test_config' })
+                });
+                const data = await response.json();
+                resultDiv.innerHTML += '<br>POST /api/test_config 成功: ' + JSON.stringify(data);
+            } catch (error) {
+                resultDiv.innerHTML += '<br>POST 请求失败: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>

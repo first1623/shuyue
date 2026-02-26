@@ -1,0 +1,196 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "created_at": "2026-02-13",
+    "project": "CodeBuddy",
+    "description": "项目提示词库 - 从代码中自动提取的提示词集合"
+  },
+  "categories": {
+    "xiaohongshu_content": {
+      "name": "小红书内容生成",
+      "description": "小红书平台的文案创作、策划和分析提示词",
+      "prompts": [
+        {
+          "id": "xhs_copywriter",
+          "name": "小红书文案生成",
+          "source": "20260206205332/agents/writer.py",
+          "system_prompt": "你是一个擅长创作小红书爆款文案的专家，深谙用户心理和平台算法。",
+          "user_prompt_template": "作为一个小红书爆款文案写手，请根据以下信息创作一篇吸引人的笔记文案：\n\n主题：{theme}\n\n内容策略：\n- 目标人群：{target_audience}\n- 内容角度：{content_angles}\n- 关键词：{keywords}\n- 文案风格：{tone}\n- Emoji推荐：{emojis}\n\n文案要求：\n1. 标题要吸睛，使用emoji和数字\n2. 正文采用\"3点法则\"，分点阐述核心内容\n3. 语言口语化，亲切自然\n4. 适当使用emoji增加趣味性\n5. 结尾引导互动（点赞、收藏、评论）\n6. 包含8-10个相关话题标签\n\n请直接输出文案内容，不要添加其他说明文字。",
+          "parameters": ["theme", "target_audience", "content_angles", "keywords", "tone", "emojis"],
+          "tags": ["文案生成", "小红书", "社交媒体"],
+          "complexity": "intermediate"
+        },
+        {
+          "id": "xhs_title_generator",
+          "name": "小红书标题生成",
+          "source": "20260206205332/agents/writer.py",
+          "system_prompt": "你是一个小红书标题创作专家。",
+          "user_prompt_template": "为主题\"{theme}\"生成{count}个吸引人的小红书标题。\n\n要求：\n1. 使用emoji\n2. 包含数字\n3. 语言口语化\n4. 每个标题不超过20字\n\n请直接输出标题列表，每行一个。",
+          "parameters": ["theme", "count"],
+          "tags": ["标题生成", "小红书"],
+          "complexity": "simple"
+        },
+        {
+          "id": "xhs_copy_rewrite",
+          "name": "小红书文案重写",
+          "source": "20260206205332/agents/writer.py",
+          "system_prompt": "你是一个小红书文案编辑专家。",
+          "user_prompt_template": "请根据以下反馈重写文案：\n\n原始文案：\n{original_copy}\n\n用户反馈：{feedback}\n\n保持小红书风格，优化内容后直接输出文案。",
+          "parameters": ["original_copy", "feedback"],
+          "tags": ["文案优化", "小红书"],
+          "complexity": "intermediate"
+        },
+        {
+          "id": "xhs_content_planner",
+          "name": "小红书内容策划",
+          "source": "20260206205332/agents/planner.py",
+          "system_prompt": "你是一个专业的小红书内容策划专家，擅长分析热点和制定爆款内容策略。",
+          "user_prompt_template": "作为一个小红书内容策划专家，请分析以下主题并制定内容策略：\n\n主题：{theme}\n\n请从以下维度分析：\n1. 目标人群：明确受众画像（年龄、性别、兴趣等）\n2. 内容角度：选择3-4个最适合的内容切入角度（如实用技巧、情感共鸣、好物分享等）\n3. 关键词：生成8-10个相关话题标签，包括主标签和长尾标签\n4. 文案风格：确定语调风格（亲切自然、专业严谨、活泼可爱等）\n5. emoji使用：推荐适合的emoji表情\n6. 最佳发布时间：建议发布时间段\n\n请以JSON格式返回。",
+          "parameters": ["theme"],
+          "output_format": "json",
+          "tags": ["内容策划", "策略分析", "小红书"],
+          "complexity": "advanced"
+        },
+        {
+          "id": "xhs_strategy_refine",
+          "name": "小红书策略优化",
+          "source": "20260206205332/agents/planner.py",
+          "system_prompt": "你是一个专业的小红书内容策划专家。",
+          "user_prompt_template": "基于以下内容策略和用户反馈，优化内容策略：\n\n原始主题：{theme}\n用户反馈：{user_feedback}\n\n请调整策略并返回优化后的JSON格式内容。",
+          "parameters": ["theme", "user_feedback"],
+          "output_format": "json",
+          "tags": ["策略优化", "小红书"],
+          "complexity": "intermediate"
+        },
+        {
+          "id": "xhs_image_prompt",
+          "name": "小红书图片提示词生成",
+          "source": "20260206205332/agents/designer.py",
+          "system_prompt": "你是一个专业的AI绘画提示词创作专家。",
+          "user_prompt_template": "为主题\"{theme}\"的文案生成2-3张配图的AI绘画提示词。\n\n文案内容：\n{copywriting}\n\n内容策略：\n- 目标人群：{target_audience}\n- 内容角度：{content_angles}\n\n请为小红书风格配图生成提示词，要求：\n1. 风格清新简约，高质量\n2. 色彩明亮，适合社交媒体传播\n3. 第一张：主题主图\n4. 第二张：细节或步骤图（如有）\n5. 第三张：氛围或效果图（可选）\n\n请以JSON格式返回。",
+          "parameters": ["theme", "copywriting", "target_audience", "content_angles"],
+          "output_format": "json",
+          "tags": ["图片生成", "AI绘画", "小红书"],
+          "complexity": "intermediate"
+        },
+        {
+          "id": "xhs_content_reviewer",
+          "name": "小红书内容审核",
+          "source": "20260206205332/agents/reviewer.py",
+          "system_prompt": "你是一个专业的内容审核专家，熟悉平台规则和内容规范。",
+          "user_prompt_template": "请审核以下小红书内容：\n\n主题：{theme}\n\n文案：\n{copy}\n\n请从以下维度审核：\n1. 内容是否违规（色情、暴力、虚假宣传等）\n2. 是否包含敏感信息\n3. 内容质量建议\n4. 格式建议\n\n请以JSON格式返回，格式如下：\n{\n    \"issues\": [\"问题1\", \"问题2\"],\n    \"warnings\": [\"警告1\", \"警告2\"],\n    \"suggestions\": [\"建议1\", \"建议2\"]\n}\n\n如果内容没有问题，issues和warnings数组为空即可。",
+          "parameters": ["theme", "copy"],
+          "output_format": "json",
+          "tags": ["内容审核", "合规检查", "小红书"],
+          "complexity": "intermediate"
+        }
+      ]
+    },
+    "wechat_article": {
+      "name": "微信公众号文章",
+      "description": "微信公众号文章生成相关提示词",
+      "prompts": [
+        {
+          "id": "wechat_title_generator",
+          "name": "公众号标题生成",
+          "source": "20260206205332/agents/wechat_writer.py",
+          "system_prompt": null,
+          "user_prompt_template": "作为微信公众号标题专家，请为以下内容生成5个吸引人的标题：\n\n主题：{theme}\n目标读者：{target_audience}\n内容类型：{content_type}\n\n标题要求：\n1. 字数控制在15-25字之间\n2. 使用疑问句或感叹句增加吸引力\n3. 包含数字或关键词\n4. 突出价值点和痛点\n5. 符合公众号调性，不夸大不标题党\n\n请直接输出5个标题，每行一个，不要添加其他内容。",
+          "parameters": ["theme", "target_audience", "content_type"],
+          "tags": ["标题生成", "微信公众号"],
+          "complexity": "simple"
+        },
+        {
+          "id": "wechat_article_writer",
+          "name": "公众号文章生成",
+          "source": "20260206205332/agents/wechat_writer.py",
+          "system_prompt": null,
+          "user_prompt_template": "作为微信公众号文章写作专家，请创作一篇高质量文章：\n\n主题：{theme}\n标题：{title}\n目标读者：{target_audience}\n内容角度：{content_angles}\n关键词：{keywords}\n写作风格：{tone}\n\n文章结构要求：\n1. 开头：用故事或问题引入，吸引读者\n2. 正文：分2-3个小节，每节一个小标题\n3. 内容：有干货、有案例、有观点\n4. 结尾：总结升华，引导关注\n5. 字数：500-800字（简洁精炼）\n\n格式要求：\n- 输出HTML格式\n- 使用<h2>标签做小标题\n- 使用<p>标签做段落\n- 适当使用<strong>强调重点\n- 段落之间用<br>分隔\n\n请直接输出HTML格式的内容，不要添加其他说明。",
+          "parameters": ["theme", "title", "target_audience", "content_angles", "keywords", "tone"],
+          "output_format": "html",
+          "tags": ["文章生成", "微信公众号", "HTML"],
+          "complexity": "advanced"
+        }
+      ]
+    },
+    "document_analysis": {
+      "name": "文档智能分析",
+      "description": "学习平台知识图谱系统的文档分析提示词",
+      "prompts": [
+        {
+          "id": "doc_intelligent_parser",
+          "name": "文档智能解析",
+          "source": "backend/app/utils/document_parser.py",
+          "system_prompt": "你是一个精准的信息抽取助手，严格按照要求返回JSON。",
+          "user_prompt_template": "你是一个专业的学习平台知识图谱系统AI分析助手。请根据下面的文档内容，提取以下信息并以JSON格式返回：\n{\n  \"abstract\": \"文档摘要，200字以内\",\n  \"keywords\": [\"关键词1\", \"关键词2\"],\n  \"theories\": [\"涉及的理论或方法名称\"],\n  \"experiment_flow\": \"实验流程简述\",\n  \"statistical_methods\": [\"使用的统计或分析方法\"],\n  \"conclusion\": \"结论简述\"\n}\n\n文档内容：\n{text_sample}",
+          "parameters": ["text_sample"],
+          "output_format": "json",
+          "tags": ["文档解析", "信息抽取", "知识图谱"],
+          "complexity": "advanced"
+        }
+      ]
+    },
+    "code_skills": {
+      "name": "代码技能定义",
+      "description": "CodeBuddy系统的Skill定义提示词",
+      "prompts": [
+        {
+          "id": "skill_prompt_collector",
+          "name": "提示词收集器Skill",
+          "source": ".codebuddy/skills/prompt-collector/SKILL.md",
+          "description": "用于扫描项目、提取、分类和整理提示词的Skill定义",
+          "tags": ["skill", "提示词收集", "自动化"],
+          "complexity": "advanced"
+        },
+        {
+          "id": "skill_project_analyzer",
+          "name": "项目分析器Skill",
+          "source": ".codebuddy/skills/project-analyzer/SKILL.md",
+          "description": "自动生成项目需求列表和功能点分解的Skill定义",
+          "tags": ["skill", "项目分析", "需求文档"],
+          "complexity": "advanced"
+        },
+        {
+          "id": "skill_auto_doc_generator",
+          "name": "自动文档生成器Skill",
+          "source": ".codebuddy/skills/auto-doc-generator/SKILL.md",
+          "description": "分析代码生成完整项目文档的Skill定义",
+          "tags": ["skill", "文档生成", "自动化"],
+          "complexity": "advanced"
+        },
+        {
+          "id": "skill_smart_code_doctor",
+          "name": "智能代码医生Skill",
+          "source": ".codebuddy/skills/smart-code-doctor/SKILL.md",
+          "description": "自动诊断和修复代码问题的Skill定义",
+          "tags": ["skill", "代码诊断", "自动修复"],
+          "complexity": "advanced"
+        }
+      ]
+    }
+  },
+  "usage_statistics": {
+    "total_prompts": 14,
+    "by_complexity": {
+      "simple": 2,
+      "intermediate": 6,
+      "advanced": 6
+    },
+    "by_category": {
+      "xiaohongshu_content": 7,
+      "wechat_article": 2,
+      "document_analysis": 1,
+      "code_skills": 4
+    }
+  },
+  "ai_providers": {
+    "supported": [
+      {"name": "DeepSeek", "model": "deepseek-chat", "recommended": true},
+      {"name": "通义千问", "model": "qwen-turbo"},
+      {"name": "月之暗面", "model": "moonshot-v1-8k"},
+      {"name": "智谱AI", "model": "GLM-4"},
+      {"name": "OpenAI", "model": "gpt-4"}
+    ],
+    "json_format_support": ["openai", "deepseek"]
+  }
+}

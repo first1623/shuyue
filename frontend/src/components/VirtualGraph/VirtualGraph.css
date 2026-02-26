@@ -1,0 +1,43 @@
+/* VirtualGraph 组件样式 */
+
+.virtual-graph-container {
+  position: relative;
+  background-color: #fafafa;
+  user-select: none;
+}
+
+.virtual-graph-container canvas {
+  display: block;
+}
+
+.graph-stats {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  color: #595959;
+}
+
+.graph-stats div {
+  margin-bottom: 4px;
+}
+
+.graph-stats div:last-child {
+  margin-bottom: 0;
+}
+
+/* 节点悬停效果 */
+.graph-node:hover {
+  filter: brightness(1.1);
+  cursor: pointer;
+}
+
+/* 性能优化：GPU加速 */
+.virtual-graph-container,
+.virtual-graph-container canvas,
+.virtual-graph-container svg {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* 平滑过渡 */
+.virtual-graph-container {
+  transition: background-color 0.3s ease;
+}

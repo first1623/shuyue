@@ -1,0 +1,29 @@
+/* Dashboard 页面样式 */
+.dashboard-page {
+  padding: 0;
+}
+
+.dashboard-page .stats-row {
+  margin-bottom: 24px;
+}
+
+.dashboard-page .charts-row {
+  margin-bottom: 24px;
+}
+
+.dashboard-page .actions-row {
+  margin-bottom: 24px;
+}
+
+.dashboard-page .quick-actions .ant-btn {
+  justify-content: flex-start;
+}
+
+.dashboard-page .system-status .status-item {
+  display: flex;
+  align-items: center;
+}
+
+.dashboard-page .recent-activities {
+  margin-top: 24px;
+}

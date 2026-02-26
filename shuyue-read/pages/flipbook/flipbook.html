@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>书页阅 - 阅读器</title>
+  <!-- jQuery (turn.js 依赖) -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <!-- turn.js -->
+  <script src="https://cdn.jsdelivr.net/npm/turn.js@4.1.0/dist/turn.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #333;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    }
+    
+    /* 主容器 */
+    #flipbook-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* 顶部工具栏 */
+    .toolbar {
+      height: 50px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, transparent 100%);
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 15px;
+      color: #fff;
+      font-size: 14px;
+    }
+    
+    .toolbar-left {
+      display: flex;
+      align-items: center;
+    }
+    
+    .btn-back {
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+      background-color: rgba(255,255,255,0.2);
+      border-radius: 20px;
+      color: #fff;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+    }
+    
+    .btn-back::before {
+      content: '';
+      display: inline-block;
+      width: 0;
+      height: 0;
+      border-right: 8px solid #fff;
+      border-top: 6px solid transparent;
+      border-bottom: 6px solid transparent;
+      margin-right: 6px;
+    }
+    
+    /* 页码显示 */
+    .page-info {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0,0,0,0.6);
+      color: #fff;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-size: 14px;
+      z-index: 100;
+    }
+    
+    /* 加载遮罩 */
+    .loading-mask {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+    }
+    
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(255,255,255,0.3);
+      border-top-color: #4A90E2;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .loading-text {
+      color: #fff;
+      margin-top: 20px;
+      font-size: 16px;
+    }
+    
+    .loading-progress {
+      color: rgba(255,255,255,0.7);
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    
+    /* 错误提示 */
+    .error-mask {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #333;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+    }
+    
+    .error-text {
+      color: #fff;
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+    
+    .btn-retry {
+      padding: 12px 40px;
+      background-color: #4A90E2;
+      color: #fff;
+      border-radius: 25px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+    }
+    
+    /* 翻页容器 */
+    #flipbook {
+      width: 100%;
+      height: 100%;
+      display: none;
+    }
+    
+    /* 页面样式 */
+    .page {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f5f5f5;
+      overflow: hidden;
+    }
+    
+    .page img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+      -webkit-user-drag: none;
+    }
+    
+    .page-loading {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f0f0f0;
+    }
+    
+    .page-loading::after {
+      content: '加载中...';
+      color: #999;
+      font-size: 14px;
+    }
+    
+    /* 隐藏滚动条 */
+    ::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+    
+    /* 触摸提示 */
+    .touch-tip {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255,255,255,0.5);
+      font-size: 12px;
+      pointer-events: none;
+    }
+    
+    .touch-tip-left {
+      left: 20px;
+    }
+    
+    .touch-tip-right {
+      right: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="flipbook-container">
+    <!-- 加载遮罩 -->
+    <div class="loading-mask" id="loadingMask">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">正在加载...</div>
+      <div class="loading-progress" id="loadingProgress">0%</div>
+    </div>
+    
+    <!-- 错误提示 -->
+    <div class="error-mask" id="errorMask">
+      <div class="error-text">加载失败</div>
+      <button class="btn-retry" onclick="retryLoad()">重试</button>
+    </div>
+    
+    <!-- 顶部工具栏 -->
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <button class="btn-back" onclick="goBack()">返回书架</button>
+      </div>
+    </div>
+    
+    <!-- 翻页主体 -->
+    <div id="flipbook">
+      <!-- 页面将通过JS动态插入 -->
+    </div>
+    
+    <!-- 页码信息 -->
+    <div class="page-info" id="pageInfo">
+      <span id="currentPage">1</span> / <span id="totalPages">0</span>
+    </div>
+  </div>
+
+  <script>
+    // 全局变量
+    let pdfId = '';
+    let pageCount = 0;
+    let imageUrls = [];
+    let currentPage = 1;
+    let isLoaded = false;
+    
+    // 初始化
+    $(document).ready(function() {
+      init();
+    });
+    
+    function init() {
+      // 获取URL参数
+      const urlParams = new URLSearchParams(window.location.search);
+      pdfId = urlParams.get('id') || '';
+      currentPage = parseInt(urlParams.get('page')) || 1;
+      
+      // 尝试从URL参数获取图片列表
+      const imagesParam = urlParams.get('images');
+      if (imagesParam) {
+        try {
+          imageUrls = JSON.parse(decodeURIComponent(imagesParam));
+          pageCount = imageUrls.length;
+          
+          if (pageCount > 0) {
+            initFlipbook();
+            return;
+          }
+        } catch (err) {
+          console.error('解析图片参数失败', err);
+        }
+      }
+      
+      if (!pdfId) {
+        showError('参数错误');
+        return;
+      }
+      
+      // 如果没有图片参数，尝试加载PDF图片列表
+      loadPdfImages();
+    }
+    
+    // 模拟图片数据（用于预览）
+    const mockImages = [
+      'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=750&h=1000&fit=crop',
+      'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=750&h=1000&fit=crop',
+      'https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=750&h=1000&fit=crop',
+      'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=750&h=1000&fit=crop',
+      'https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=750&h=1000&fit=crop',
+      'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=750&h=1000&fit=crop',
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=750&h=1000&fit=crop',
+      'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=750&h=1000&fit=crop',
+      'https://images.unsplash.com/photo-1519682337058-a94d519337bc?w=750&h=1000&fit=crop',
+      'https://images.unsplash.com/photo-1524578271613-d550eacf6090?w=750&h=1000&fit=crop'
+    ];
+    
+    // 加载PDF图片列表
+    async function loadPdfImages() {
+      try {
+        // 调用云函数获取PDF详情（包括图片列表）
+        // 在小程序环境中需要使用特殊方式调用
+        const result = await wx.cloud.callFunction({
+          name: 'getPdfDetail',
+          data: { pdfId: pdfId }
+        });
+        
+        if (result.result && result.result.data) {
+          const pdfData = result.result.data;
+          imageUrls = pdfData.images || [];
+          pageCount = imageUrls.length;
+          
+          if (pageCount === 0) {
+            showError('暂无内容');
+            return;
+          }
+          
+          // 初始化翻页
+          initFlipbook();
+        } else {
+          // 使用模拟数据
+          useMockImages();
+        }
+      } catch (err) {
+        console.error('加载PDF失败，使用模拟数据:', err);
+        // 使用模拟数据
+        useMockImages();
+      }
+    }
+    
+    // 使用模拟图片数据
+    function useMockImages() {
+      console.log('使用模拟数据预览');
+      imageUrls = mockImages;
+      pageCount = imageUrls.length;
+      initFlipbook();
+    }
+    
+    // 初始化翻页组件
+    function initFlipbook() {
+      const $flipbook = $('#flipbook');
+      
+      // 创建页面元素
+      for (let i = 0; i < pageCount; i++) {
+        const pageHtml = '<div class="page" data-page="' + (i + 1) + '">' +
+          '<img src="' + imageUrls[i] + '" alt="第' + (i + 1) + '页" loading="lazy">' +
+          '</div>';
+        $flipbook.append(pageHtml);
+      }
+      
+      // 获取屏幕尺寸
+      const width = $(window).width();
+      const height = $(window).height();
+      
+      // 隐藏加载遮罩
+      $('#loadingMask').hide();
+      $flipbook.show();
+      
+      // 初始化turn.js
+      $flipbook.turn({
+        width: width,
+        height: height,
+        autoCenter: true,
+        display: 'double', // 双页显示
+        acceleration: true,
+        gradients: true,
+        elevation: 50,
+        when: {
+          first: function(event, page) {
+            // 第一页
+            updatePageInfo(page);
+          },
+          last: function(event, page) {
+            // 最后一页
+            updatePageInfo(page);
+            // 通知小程序已读完
+            wx.miniProgram.postMessage({
+              data: { finished: true }
+            });
+          },
+          turned: function(event, page, view) {
+            // 翻页完成
+            currentPage = page;
+            updatePageInfo(page);
+            // 发送消息给小程序
+            wx.miniProgram.postMessage({
+              data: { currentPage: page }
+            });
+            // 预加载相邻页面
+            preloadPages(page);
+          },
+          turning: function(event, page, view) {
+            // 即将翻页
+            // 可以在这里预加载
+          }
+        }
+      });
+      
+      // 跳转到指定页
+      if (currentPage > 1) {
+        $flipbook.turn('page', currentPage);
+      }
+      
+      // 更新页码信息
+      updatePageInfo(currentPage);
+      
+      // 监听窗口大小变化
+      $(window).on('resize', function() {
+        resizeFlipbook();
+      });
+      
+      isLoaded = true;
+    }
+    
+    // 更新页码信息
+    function updatePageInfo(page) {
+      // turn.js 返回的 page 是实际页码
+      // 需要转换为阅读的页码（双页模式下需要特殊处理）
+      let displayPage = page;
+      
+      // 如果是双页模式，当前显示的两页中，取较大页码
+      if ($('#flipbook').turn('display') === 'double') {
+        // 双页模式下，page 1-2 显示第一对，3-4 显示第二对...
+        // 我们显示的是"看到哪一页"
+        displayPage = Math.min(page * 2, pageCount);
+      }
+      
+      $('#currentPage').text(displayPage);
+      $('#totalPages').text(pageCount);
+    }
+    
+    // 预加载相邻页面图片
+    function preloadPages(currentPage) {
+      // 预加载当前页的上一页和下一页
+      const pagesToPreload = [currentPage - 1, currentPage + 1];
+      
+      pagesToPreload.forEach(function(pageNum) {
+        if (pageNum > 0 && pageNum <= pageCount) {
+          const img = new Image();
+          img.src = imageUrls[pageNum - 1];
+        }
+      });
+    }
+    
+    // 调整翻页组件大小
+    function resizeFlipbook() {
+      const width = $(window).width();
+      const height = $(window).height();
+      
+      $('#flipbook').turn('size', width, height);
+    }
+    
+    // 显示错误
+    function showError(message) {
+      $('#loadingMask').hide();
+      $('#errorMask').show();
+      $('.error-text').text(message);
+    }
+    
+    // 重试加载
+    function retryLoad() {
+      $('#errorMask').hide();
+      $('#loadingMask').show();
+      $('#loadingProgress').text('0%');
+      $('#flipbook').empty();
+      loadPdfImages();
+    }
+    
+    // 返回书架
+    function goBack() {
+      wx.miniProgram.navigateBack();
+    }
+  </script>
+</body>
+</html>

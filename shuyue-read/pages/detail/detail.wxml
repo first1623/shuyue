@@ -1,0 +1,69 @@
+<!--pages/detail/detail.wxml-->
+<view class="container">
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="loading-state">
+    <text>加载中...</text>
+  </view>
+
+  <view wx:else class="detail-content">
+    <!-- 封面区域 -->
+    <view class="cover-section">
+      <image 
+        class="cover-image" 
+        src="{{pdf.cover}}" 
+        mode="aspectFit"
+        lazy-load>
+      </image>
+    </view>
+
+    <!-- 基本信息 -->
+    <view class="info-section">
+      <text class="book-title">{{pdf.title}}</text>
+      <text class="book-author">作者：{{pdf.author}}</text>
+      <view class="book-meta">
+        <text class="meta-item">{{pdf.pages}} 页</text>
+        <text class="meta-item">阅读 {{pdf.viewCount || 0 }} 次</text>
+      </view>
+    </view>
+
+    <!-- 简介 -->
+    <view class="desc-section" wx:if="{{pdf.description}}">
+      <text class="section-title">简介</text>
+      <text class="book-desc">{{pdf.description}}</text>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="action-section">
+      <button 
+        class="btn-favorite {{isFavorite ? 'active' : ''}}"
+        bindtap="toggleFavorite">
+        <text class="heart-icon">{{isFavorite ? '❤️' : '🤍'}}</text>
+        <text>{{isFavorite ? '已收藏' : '收藏'}}</text>
+      </button>
+      
+      <button 
+        class="btn-read"
+        bindtap="startReading">
+        <text>开始阅读</text>
+      </button>
+    </view>
+
+    <!-- 翻页预览提示 -->
+    
+
+    <!-- 试读部分 -->
+    <view class="preview-section" wx:if="{{previewImages.length > 0}}">
+      <text class="section-title">试读</text>
+      <scroll-view class="preview-scroll" scroll-x>
+        <image 
+          wx:for="{{previewImages}}" 
+          wx:key="index"
+          class="preview-image"
+          src="{{item}}"
+          mode="aspectFit"
+          lazy-load>
+        </image>
+      </scroll-view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@tanstack/react-query": "^5.90.21",
+    "react-virtualized-auto-sizer": "^2.0.3",
+    "react-window": "^2.2.7"
+  }
+}

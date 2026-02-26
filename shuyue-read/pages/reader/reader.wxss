@@ -1,0 +1,85 @@
+/* pages/reader/reader.wxss */
+
+.reader-container {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+}
+
+web-view {
+  width: 100%;
+  height: 100%;
+}
+
+/* 加载遮罩 */
+.loading-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.loading-spinner {
+  width: 60rpx;
+  height: 60rpx;
+  border: 4rpx solid #E5E5E5;
+  border-top-color: #4A90E2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-content text {
+  margin-top: 20rpx;
+  font-size: 28rpx;
+  color: #999999;
+}
+
+/* 错误遮罩 */
+.error-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.error-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.error-text {
+  font-size: 32rpx;
+  color: #333333;
+  margin-bottom: 30rpx;
+}
+
+.btn-retry {
+  padding: 20rpx 60rpx;
+  background-color: #4A90E2;
+  color: #FFFFFF;
+  border-radius: 44rpx;
+  font-size: 28rpx;
+}

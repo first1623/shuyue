@@ -1,0 +1,111 @@
+<!--pages/index/index.wxml-->
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input-wrapper" bindtap="goToSearch">
+      <text class="search-placeholder">🔍 搜索书名、作者...</text>
+    </view>
+  </view>
+
+  <!-- 栏目导航 -->
+  <view class="category-nav">
+    <scroll-view 
+      class="category-scroll" 
+      scroll-x 
+      enable-flex 
+      scroll-into-view="{{'category-' + currentCategoryIndex}}"
+      scroll-with-animation>
+      <view 
+        wx:for="{{categories}}" 
+        wx:key="_id" 
+        class="category-item {{currentCategoryIndex === index ? 'active' : ''}}"
+        id="{{'category-' + index}}"
+        bindtap="onCategoryChange"
+        data-index="{{index}}"
+        data-id="{{item._id}}">
+        {{item.name}}
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- PDF列表 -->
+  <scroll-view 
+    class="pdf-list" 
+    scroll-y 
+    enable-flex
+    refresher-enabled="{{true}}"
+    refresher-triggered="{{refreshing}}"
+    bindrefresherrefresh="onRefresh"
+    bindscrolltolower="onLoadMore"
+    lower-threshold="100">
+    
+    <!-- 骨架屏加载 -->
+    <view wx:if="{{loading}}" class="skeleton-list">
+      <view wx:for="{{[1,2,3,4,5,6]}}" wx:key="index" class="skeleton-card">
+        <view class="skeleton-cover"></view>
+        <view class="skeleton-title"></view>
+        <view class="skeleton-info"></view>
+      </view>
+    </view>
+
+    <!-- PDF卡片列表 -->
+    <view wx:else class="pdf-cards">
+      <view 
+        wx:for="{{pdfList}}" 
+        wx:key="_id" 
+        class="pdf-card"
+        bindtap="goToDetail"
+        data-id="{{item._id}}">
+        <image 
+          class="pdf-cover" 
+          src="{{item.cover}}" 
+          mode="aspectFill"
+          lazy-load>
+        </image>
+        <view class="pdf-info">
+          <text class="pdf-title">{{item.title}}</text>
+          <text class="pdf-author">{{item.author}}</text>
+          <text class="pdf-pages">{{item.pages}}页</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 加载更多 -->
+    <view class="loading-more" wx:if="{{hasMore && !loading}}">
+      <text>上拉加载更多</text>
+    </view>
+    
+    <!-- 没有更多 -->
+    <view class="loading-more" wx:if="{{!hasMore && pdfList.length > 0}}">
+      <text>没有更多了</text>
+    </view>
+
+    <!-- 数据库错误状态 -->
+    <view class="db-error-state" wx:if="{{dbError}}">
+      <text class="error-icon">⚠️</text>
+      <text class="error-title">数据库未初始化</text>
+      <text class="error-desc">{{errorMessage}}</text>
+      <view class="error-steps">
+        <text class="step-title">操作步骤：</text>
+        <text class="step">1. 进入云开发控制台</text>
+        <text class="step">2. 点击「数据库」</text>
+        <text class="step">3. 创建三个集合：</text>
+        <text class="step-item">• categories（栏目表）</text>
+        <text class="step-item">• pdfs（PDF资料表）</text>
+        <text class="step-item">• users（用户表）</text>
+        <text class="step">4. 在 categories 集合添加栏目数据</text>
+      </view>
+      <button class="btn-retry" bindtap="onRefresh">重新加载</button>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{!loading && !dbError && pdfList.length === 0}}">
+      <text style="font-size: 80rpx; margin-bottom: 20rpx;">📚</text>
+      <text>暂无图书</text>
+      <text style="font-size: 24rpx; color: #999; margin-top: 20rpx; padding: 0 60rpx; text-align: center;">
+        真机调试时如看不到内容，请检查网络连接或下拉刷新
+      </text>
+      <button class="debug-btn" bindtap="useMockData" style="margin-top: 40rpx;">使用测试数据</button>
+    </view>
+  </scroll-view>
+</view>

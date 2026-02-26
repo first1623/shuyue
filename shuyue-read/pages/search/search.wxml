@@ -1,0 +1,67 @@
+<!--pages/search/search.wxml-->
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input-wrapper">
+      <image class="search-icon" src="/assets/icons/search.png" mode="aspectFit"></image>
+      <input 
+        class="search-input" 
+        type="text" 
+        placeholder="搜索书名、作者..." 
+        value="{{keyword}}"
+        focus="{{true}}"
+        bindinput="onInput"
+        bindconfirm="onSearch"
+        confirm-type="search"
+      />
+      <view class="search-clear" wx:if="{{keyword}}" bindtap="clearSearch">
+        <image src="/assets/icons/clear.png" mode="aspectFit"></image>
+      </view>
+    </view>
+    <text class="cancel-btn" bindtap="goBack">取消</text>
+  </view>
+
+  <!-- 搜索结果 -->
+  <view class="result-section" wx:if="{{hasSearched}}">
+    <view wx:if="{{loading}}" class="loading-state">
+      <text>搜索中...</text>
+    </view>
+    
+    <view wx:elif="{{resultList.length === 0}}" class="empty-state">
+      <image src="/assets/icons/empty-search.png" mode="aspectFit"></image>
+      <text>未找到相关图书</text>
+      <text class="empty-hint">换个关键词试试</text>
+    </view>
+    
+    <view wx:else class="result-list">
+      <view 
+        wx:for="{{resultList}}" 
+        wx:key="_id" 
+        class="result-item"
+        bindtap="goToDetail"
+        data-id="{{item._id}}">
+        <image class="result-cover" src="{{item.cover}}" mode="aspectFill" lazy-load></image>
+        <view class="result-info">
+          <text class="result-title">{{item.title}}</text>
+          <text class="result-author">{{item.author}}</text>
+          <text class="result-desc">{{item.description}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 热门搜索 -->
+  <view class="hot-section" wx:if="{{!hasSearched}}">
+    <text class="section-title">热门搜索</text>
+    <view class="hot-tags">
+      <view 
+        wx:for="{{hotKeywords}}" 
+        wx:key="index" 
+        class="hot-tag"
+        bindtap="onHotTap"
+        data-keyword="{{item}}">
+        {{item}}
+      </view>
+    </view>
+  </view>
+</view>

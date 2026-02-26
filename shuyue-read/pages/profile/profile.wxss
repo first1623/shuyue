@@ -1,0 +1,117 @@
+/* pages/profile/profile.wxss */
+
+.container {
+  min-height: 100vh;
+  background-color: var(--bg-color);
+}
+
+/* 用户信息 */
+.user-section {
+  background: linear-gradient(135deg, #4A90E2 0%, #6BA3F6 100%);
+  padding: 60rpx 30rpx 40rpx;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 50%;
+  border: 4rpx solid var(--white);
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.15);
+}
+
+.nickname {
+  margin-top: 20rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  color: var(--white);
+}
+
+.user-login {
+  display: flex;
+  justify-content: center;
+}
+
+.btn-login {
+  background-color: var(--white);
+  color: var(--primary-color);
+  border-radius: 44rpx;
+  padding: 20rpx 60rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+}
+
+/* 统计信息 */
+.stats-section {
+  display: flex;
+  background-color: var(--white);
+  padding: 40rpx 0;
+  border-radius: 0 0 20rpx 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.stat-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-right: 1rpx solid var(--border-color);
+}
+
+.stat-item:last-child {
+  border-right: none;
+}
+
+.stat-num {
+  font-size: 40rpx;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.stat-label {
+  font-size: 24rpx;
+  color: var(--text-tertiary);
+  margin-top: 8rpx;
+}
+
+/* 功能列表 */
+.menu-section {
+  background-color: var(--white);
+  margin: 20rpx;
+  border-radius: 16rpx;
+  overflow: hidden;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 30rpx;
+  border-bottom: 1rpx solid var(--border-color);
+}
+
+.menu-item:last-child {
+  border-bottom: none;
+}
+
+.menu-icon {
+  width: 44rpx;
+  height: 44rpx;
+  margin-right: 20rpx;
+}
+
+.menu-text {
+  flex: 1;
+  font-size: 28rpx;
+  color: var(--text-primary);
+}
+
+.menu-arrow {
+  width: 24rpx;
+  height: 24rpx;
+  opacity: 0.5;
+}
