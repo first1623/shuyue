@@ -1,4 +1,51 @@
-/** 主题详情页样式 **/
+/** 主题详情页样式 */
+
+/* 全局主题色，与【主题页】保持一致 */
+page {
+  --primary-gradient: linear-gradient(135deg, #5A4B99 0%, #2E3BFF 100%);
+  --primary-blue: #2E3BFF;
+  --bg-card: #FFFFFF;
+  --bg-glass: rgba(255, 255, 255, 0.8);
+  --text-primary: #333333;
+  --text-secondary: #999999;
+  --text-white: #FFFFFF;
+  --shadow-light: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --radius-sm: 8rpx;
+  --radius-md: 24rpx;
+  --radius-lg: 32rpx;
+  --radius-full: 999rpx;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  background-color: #F5F7FA;
+}
+
+/* 全局字体层级 */
+.h1 {
+  font-size: 48rpx;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.h2 {
+  font-size: 40rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.h3 {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.body {
+  font-size: 32rpx;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+.caption {
+  font-size: 28rpx;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+/* 页面主容器 */
 .theme-detail-page {
   width: 100vw;
   height: 100vh;
