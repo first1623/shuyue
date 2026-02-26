@@ -162,16 +162,14 @@ Page({
     this.updateRemainingCount();
   },
 
-  // 订阅按钮点击
+  // 订阅按钮点击 - 订阅并跳转到详情页
   onSubscribe(e) {
     const themeId = e.currentTarget.dataset.id;
     const theme = this.data.themes.find(t => t.id === themeId);
     
     if (theme.isSubscribed) {
-      wx.showToast({
-        title: '已订阅该主题',
-        icon: 'none'
-      });
+      // 已订阅直接跳转到详情页
+      this.goToThemeDetail(themeId);
       return;
     }
     
@@ -188,14 +186,27 @@ Page({
       );
       this.setData({ themes });
       
+      // 同步到云数据库
+      this.syncSubscriptionToCloud(themeId);
+      
       wx.showToast({
         title: '订阅成功',
-        icon: 'success'
+        icon: 'success',
+        duration: 1500,
+        success: () => {
+          // 延迟跳转到主题详情页
+          setTimeout(() => {
+            this.goToThemeDetail(themeId);
+          }, 1500);
+        }
       });
-      
-      // 同步到云数据库（可选）
-      this.syncSubscriptionToCloud(themeId);
     }
+  },
+
+  // 卡片点击 - 跳转到主题详情页
+  onCardTap(e) {
+    const themeId = e.currentTarget.dataset.id;
+    this.goToThemeDetail(themeId);
   },
 
   // 同步订阅到云端

@@ -97,13 +97,13 @@
           wx:key="id"
           class="swiper-item"
         >
-          <view class="theme-card">
+          <view class="theme-card" bindtap="onCardTap" data-id="{{item.id}}">
             <!-- 卡片顶部 -->
             <view class="card-header">
-            <view class="theme-icon-large" style="background: {{item.color}};">
-              <text wx:if="{{item.iconType === 'emoji'}}" class="icon-emoji-large">{{item.icon}}</text>
-              <image wx:else src="{{item.icon}}" mode="aspectFit"/>
-            </view>
+              <view class="theme-icon-large" style="background: {{item.color}};">
+                <text wx:if="{{item.iconType === 'emoji'}}" class="icon-emoji-large">{{item.icon}}</text>
+                <image wx:else src="{{item.icon}}" mode="aspectFit"/>
+              </view>
               <view class="theme-info">
                 <text class="theme-title">{{item.name}}</text>
                 <view class="theme-tags">
@@ -122,11 +122,11 @@
               <view 
                 class="subscribe-btn {{item.isSubscribed ? 'subscribed' : ''}}"
                 style="background: {{item.isSubscribed ? '#ccc' : item.color}};"
-                bindtap="onSubscribe"
+                catchtap="onSubscribe"
                 data-id="{{item.id}}"
               >
-                <text class="btn-text">{{item.isSubscribed ? '已订阅' : '立即订阅'}}</text>
-                <text class="btn-arrow" wx:if="{{!item.isSubscribed}}">→</text>
+                <text class="btn-text">{{item.isSubscribed ? '查看详情' : '立即订阅'}}</text>
+                <text class="btn-arrow">→</text>
               </view>
             </view>
           </view>
