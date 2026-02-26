@@ -141,34 +141,6 @@ const getThemesData = (categoryMap) => [
     status: true
   }
 ];
-    darkenColor: '#2563EB',
-    lightColor: 'rgba(59, 130, 246, 0.15)',
-    icon: '🏛️',
-    bgImage: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800',
-    tags: ['政府数字化', '智慧城市'],
-    description: '政务服务数字化转型最佳实践，一网通办、数据共享等创新应用。',
-    subtitle: '政务服务数字化转型最佳实践',
-    categoryIds: [],
-    sort: 5,
-    status: true
-  },
-  {
-    themeId: 'energy-transition',
-    name: '能源转型',
-    shortName: '能源转型',
-    color: '#8B5CF6',
-    darkenColor: '#7C3AED',
-    lightColor: 'rgba(139, 92, 246, 0.15)',
-    icon: '🔄',
-    bgImage: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800',
-    tags: ['能源革命', '可再生'],
-    description: '传统能源向可再生能源转型战略，储能技术与多能互补解决方案。',
-    subtitle: '传统能源向可再生能源转型战略',
-    categoryIds: [],
-    sort: 6,
-    status: true
-  }
-];
 
 // 初始化专家数据
 const expertsData = [
